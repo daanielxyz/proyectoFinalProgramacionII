@@ -1,7 +1,6 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ public abstract class Alojamiento {
         private LocalDateTime fechaEntrada;
         private LocalDateTime fechaSalida;
         private  int numHuespedes;
-        private float valorEstanciaTotal;
+        private double valorEstanciaTotal;
     //ATRIBUTOS OBLIGATORIOS
         @NonNull private String nombre;
         @NonNull private Ciudad ciudad;
@@ -24,5 +23,6 @@ public abstract class Alojamiento {
         @NonNull private String imagen;
         @NonNull private String precioPorNoche;
         @NonNull private int huespedesMaximos;
-        @NonNull private List<String> serviciosDisponibles; //CREAR HERENCIAS
+        @NonNull private List<String> serviciosDisponibles;
+
 }
