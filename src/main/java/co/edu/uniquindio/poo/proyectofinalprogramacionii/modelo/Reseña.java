@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Ciudad {
-    private String nombre;
+public class Reseña {
+    private String reseña;
 }
