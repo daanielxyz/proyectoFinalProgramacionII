@@ -13,6 +13,5 @@ public class Apartamento extends Alojamiento {
         super(nombre, ciudad, descripcion, imagen, precioPorNoche, huespedesMaximos, serviciosDisponibles);
         this.costoAseoYMantenimiento = costoAseoYMantenimiento;
         setPrecioPorNocheTotal(precioPorNoche + costoAseoYMantenimiento);
-        setEstaHospedado(false);
     }
 }

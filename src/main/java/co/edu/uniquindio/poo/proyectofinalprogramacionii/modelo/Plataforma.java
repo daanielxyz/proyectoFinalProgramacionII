@@ -23,7 +23,8 @@ public class Plataforma {
     private ArrayList<Transaccion> listaTransacciones = new ArrayList<>();
     private ArrayList<Billetera> listaBilleteras = new ArrayList<>();
     private ArrayList<Alojamiento> listaAlojamientos = new ArrayList<>();
-    private ArrayList<Reserva> listaReservas = new ArrayList<>();
+    private ArrayList<Reserva> listaReservasTotalesActivas = new ArrayList<>();
+    private ArrayList<Reserva> listaReservasTotalesHistoricas = new ArrayList<>();
 
     //SINGLETON
     public static Plataforma INSTANCIA;
@@ -90,11 +91,9 @@ public class Plataforma {
             }
 
         //ELIMINAR CLIENTE
-            public void eliminarCliente(Cliente cliente){
-                //LISTA GENERAL DE RESERVAS EN PLATAFORMA, LISTA INDIVIDUAL PARA CLIENTE
-                //METODOS DE REALIZARRESERVA A CLIENTE
-                
-                listaClientes.remove(cliente);
+            public void eliminarCliente(Cliente cliente) throws Exception {
+                //ELIMINAR EL CLIENTE DE LA LISTA DE CLIENTES
+                //VALIDAR QUE NO PUEDA ELIMINAR EL CLIENTE CON RESERVAS ACTIVAS
             }
 
 
@@ -146,44 +145,6 @@ public class Plataforma {
                 return alojamientosFiltrados;
             }
 
-        //VALIDAR RESERVA
-            public void validarReserva(Reserva reserva, Billetera billetera) throws Exception {
-                if(reserva.getAlojamientoReservado().isEstaHospedado()){
-                    throw new Exception("El alojamiento ya esta hospedado");
-                } else if(reserva.getFechaEntrada().isAfter(reserva.getFechaSalida())){
-                    throw new Exception("La fecha de entrada esta seleccionada para después de la de salida");
-                } else if(reserva.getFechaSalida().isBefore(reserva.getFechaEntrada())){
-                    throw new Exception("La fecha de salida esta seleccionada para antes de la fecha de entrada");
-                } else if(reserva.getNumHuespedes() > reserva.getAlojamientoReservado().getHuespedesMaximos()){
-                    throw new Exception("La reserva excede la cantidad maxima de huéspedes permitidos por el alojamiento");
-                } else if (billetera.getSaldo() < reserva.getAlojamientoReservado().getPrecioPorNocheTotal() * Reserva.calcularNochesDeReserva(reserva.getFechaEntrada(), reserva.getFechaSalida())){
-                    throw new Exception("No hay saldo suficiente para completar la reserva");
-                }
-            }
-
-        //REALIZAR RESERVA
-            public Reserva realizarReserva(Cliente clienteHospedado, Alojamiento alojamientoReservado, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, int numHuespedes) throws Exception {
-                Reserva reserva = new Reserva(clienteHospedado, alojamientoReservado, fechaEntrada, fechaSalida, numHuespedes);
-                validarReserva(reserva, obtenerBilleteraDeUnCliente(clienteHospedado));
-                alojamientoReservado.setEstaHospedado(true);
-                listaReservas.add(reserva);
-                return reserva;
-            }
-
-        //CANCELAR RESERVA
-            public void cancelarReserva(Reserva reserva){
-                listaReservas.remove(reserva);
-                reserva.getAlojamientoReservado().setEstaHospedado(false);
-            }
-
-        //LISTAR RESERVAS
-            public List<Reserva> listarReservasCliente(Cliente cliente) throws Exception {
-                List<Reserva> reservasDelCliente = listaReservas.stream().filter(r -> r.getClienteHospedado().equals(cliente)).toList();
-                if(reservasDelCliente.isEmpty()){
-                    throw new Exception("No tienes alojamientos reservados por ahora");
-                }
-                return reservasDelCliente;
-            }
 
         //RECARGAR BILLETERA
             public void recargarBilletera(Cliente cliente, double cantidad) throws Exception {
@@ -198,6 +159,15 @@ public class Plataforma {
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("No se encontró una billetera asociada al cliente"));
         }
+
+        //LISTAR RESERVAS DE UN USUARIO
+            public List<Reserva> listarReservasCliente(Cliente cliente) throws Exception {
+                List<Reserva> reservasDelCliente = listaReservasTotales.stream().filter(r -> r.getClienteHospedado().equals(cliente)).toList();
+                if(reservasDelCliente.isEmpty()){
+                    throw new Exception("No tienes alojamientos reservados por ahora");
+                }
+                return reservasDelCliente;
+            }
 
 
 

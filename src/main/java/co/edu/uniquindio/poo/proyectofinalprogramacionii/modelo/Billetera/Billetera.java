@@ -20,31 +20,31 @@ public class Billetera {
     private static final float COSTO = 200;
 
     //METODO PARA CREAR UN NUMERO UNICO DE BILLETERA
-    public String crearNumeroUnicoBilletera() {
-        StringBuilder sb = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 10; i++) {
-            sb.append(random.nextInt(10));
+        public String crearNumeroUnicoBilletera() {
+            StringBuilder sb = new StringBuilder();
+            Random random = new Random();
+            for (int i = 0; i < 10; i++) {
+                sb.append(random.nextInt(10));
+            }
+            return sb.toString();
         }
-        return sb.toString();
-    }
 
 
     //METODO PARA REALIZAR UNA TRANSACCION
-    public Transaccion realizarTransaccion(double saldoTransferir, Billetera origen,  Billetera destino) throws Exception{
+        public Transaccion realizarTransaccion(double saldoTransferir, Billetera origen,  Billetera destino) throws Exception{
 
-        Transaccion transaccion=new Transaccion(LocalDateTime.now(), destino, origen, (float)saldoTransferir);
+            Transaccion transaccion=new Transaccion(LocalDateTime.now(), destino, origen, (float)saldoTransferir);
 
-        validarTransaccion(transaccion);
+            validarTransaccion(transaccion);
 
-        origen.restarSaldo(saldoTransferir,origen);
-        destino.sumarMonto(saldoTransferir,destino);
+            origen.restarSaldo(saldoTransferir,origen);
+            destino.sumarMonto(saldoTransferir,destino);
 
-        origen.agregarTransaccion(transaccion);
-        destino.agregarTransaccion(transaccion);
-        Plataforma.getInstancia().getListaTransacciones().add(transaccion);
+            origen.agregarTransaccion(transaccion);
+            destino.agregarTransaccion(transaccion);
+            Plataforma.getInstancia().getListaTransacciones().add(transaccion);
 
-        return transaccion;
+            return transaccion;
     }
 
     //METODO PARA VALIDAR UNA TRANSACCION

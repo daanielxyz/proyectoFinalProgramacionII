@@ -14,7 +14,6 @@ public class Hotel extends Alojamiento {
         super(nombre, ciudad, descripcion, imagen, precioPorNoche, huespedesMaximos, serviciosDisponibles);
         this.habitaciones = habitaciones;
         setPrecioPorNocheTotal(precioPorNoche);
-        setEstaHospedado(false);
     }
 
 

@@ -12,10 +12,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public abstract class Alojamiento {
     //ATRIBUTOS NO OBLIGATORIOS
-        private boolean estaHospedado;
         private double precioPorNocheTotal;
         private List<Reseña> listaReseñas;
         private List<Valoracion> listaValoraciones;
+        private List<Reserva> reservasAlojamientoHistoricas;
+        private List<Reserva> reservasAlojamientoActivas;
 
     //ATRIBUTOS OBLIGATORIOS
         @NonNull private String nombre;
