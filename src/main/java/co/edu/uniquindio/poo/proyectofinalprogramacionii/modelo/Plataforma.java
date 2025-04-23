@@ -162,7 +162,7 @@ public class Plataforma {
 
         //LISTAR RESERVAS DE UN USUARIO
             public List<Reserva> listarReservasCliente(Cliente cliente) throws Exception {
-                List<Reserva> reservasDelCliente = listaReservasTotales.stream().filter(r -> r.getClienteHospedado().equals(cliente)).toList();
+                List<Reserva> reservasDelCliente = listaReservasTotalesHistoricas.stream().filter(r -> r.getClienteHospedado().equals(cliente)).toList();
                 if(reservasDelCliente.isEmpty()){
                     throw new Exception("No tienes alojamientos reservados por ahora");
                 }

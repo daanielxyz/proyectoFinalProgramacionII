@@ -2,11 +2,14 @@ package co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamientos;
 
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamiento;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Ciudad;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 public class Casa extends Alojamiento {
-
+    @Getter
+    @Setter
     private double costoAseoYMantenimiento;
     private double precioPorNocheTotal;
 
