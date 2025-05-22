@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="co.edu.uniquindio.poo.proyectofinalprogramacionii.controladores.PantallaInicioController"
-            prefHeight="400.0" prefWidth="600.0">
-    <ListView fx:id="listaAlojamientos" layoutX="10" layoutY="10" prefHeight="300" prefWidth="580"/>
-    <Button text="Registrarse" layoutX="10" layoutY="320" onAction="#irARegistro"/>
-    <Button text="Iniciar Sesión" layoutX="100" layoutY="320" onAction="#irAInicioSesion"/>
-</AnchorPane>
+<VBox xmlns="http://javafx.com/javafx" spacing="10" alignment="CENTER">
+    <TextField fx:id="busquedaField" promptText="Buscar por ciudad, nombre, tipo o precio"/>
+    <ListView fx:id="listaAlojamientos"/>
+    <Label text="Ofertas Especiales"/>
+    <HBox fx:id="ofertasBox" spacing="10"/>
+    <HBox spacing="10">
+        <Button text="Iniciar Sesión" onAction="#irAInicioSesion"/>
+        <Button text="Registrarse" onAction="#irARegistro"/>
+    </HBox>
+</VBox>

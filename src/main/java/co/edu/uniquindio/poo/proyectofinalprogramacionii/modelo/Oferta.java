@@ -11,15 +11,14 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-public class Factura implements Serializable {
+public class Oferta implements Serializable {
     private UUID id;
-    private double subtotal;
-    private double total;
-    private LocalDateTime fecha;
-    private Reserva reserva;
-    private String qrPath;
+    private String alojamientoNombre;
+    private double descuento;
+    private LocalDateTime fechaInicio;
+    private LocalDateTime fechaFin;
 
-    public Factura() {
+    public Oferta() {
         this.id = UUID.randomUUID();
     }
 }

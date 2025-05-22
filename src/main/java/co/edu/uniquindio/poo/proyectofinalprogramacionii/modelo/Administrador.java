@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class Administrador implements Serializable {
     private static Administrador instancia;
-    private final String email = "admin@bookyourstay.com";
-    private final String contrasena = "admin123";
+    private String email = "admin@bookyourstay.com";
+    private String contrasena = "admin123";
 
     private Administrador() {}
 
@@ -22,5 +22,9 @@ public class Administrador implements Serializable {
 
     public String getContrasena() {
         return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 }

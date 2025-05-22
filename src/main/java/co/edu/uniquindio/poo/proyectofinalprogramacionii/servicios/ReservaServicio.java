@@ -3,11 +3,13 @@ package co.edu.uniquindio.poo.proyectofinalprogramacionii.servicios;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.*;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamientos.Habitacion.Habitacion;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamientos.Hotel;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.OfertaRepositorioImpl;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.ReservaRepositorio;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.utils.EnvioEmail;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.utils.GeneradorQR;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ReservaServicio {
     private final ReservaRepositorio reservaRepositorio;
@@ -19,9 +21,25 @@ public class ReservaServicio {
     }
 
     public void realizarReserva(Reserva reserva, Usuario usuario, Habitacion habitacion) throws Exception {
+        Alojamiento alojamiento = reserva.getAlojamientoReservado();
+        OfertaServicio ofertaServicio = new OfertaServicio(new OfertaRepositorioImpl()); // Inyección manual, idealmente usar DI
+
+        // Validar capacidad
+        if (reserva.getNumHuespedes() > alojamiento.getHuespedesMaximos()) {
+            throw new Exception("El número de huéspedes excede la capacidad máxima del alojamiento");
+        }
+
+        // Validar disponibilidad
+        List<Reserva> reservasActivas = alojamiento.getReservasAlojamientoActivas();
+        for (Reserva r : reservasActivas) {
+            if (!(reserva.getFechaSalida().isBefore(r.getFechaEntrada()) ||
+                    reserva.getFechaEntrada().isAfter(r.getFechaSalida()))) {
+                throw new Exception("El alojamiento no está disponible en las fechas solicitadas");
+            }
+        }
+
         double noches = Reserva.calcularNochesDeReserva(reserva.getFechaEntrada(), reserva.getFechaSalida());
         double monto;
-        Alojamiento alojamiento = reserva.getAlojamientoReservado();
 
         // Calcular precio según el tipo de alojamiento
         if (alojamiento instanceof Hotel hotel) {
@@ -33,27 +51,34 @@ public class ReservaServicio {
             monto = alojamiento.getPrecioPorNocheTotal() * noches;
         }
 
+        // Aplicar descuento si hay oferta
+        double descuento = ofertaServicio.aplicarOferta(alojamiento, reserva.getFechaEntrada());
+        double montoConDescuento = monto * (1 - descuento);
+
         // Crear factura
         Factura factura = Factura.builder()
                 .subtotal(monto)
-                .total(monto)
+                .total(montoConDescuento)
                 .fecha(LocalDateTime.now())
                 .reserva(reserva)
                 .build();
 
         // Pagar con billetera
-        billeteraServicio.pagarReserva(usuario.getBilletera(), monto, reserva);
+        billeteraServicio.pagarReserva(usuario.getBilletera(), montoConDescuento, reserva);
 
-        // Guardar reserva
-        reservaRepositorio.guardar(reserva);
-
-        // Generar QR (para el Día 2)
-        String qrData = "Factura ID: " + factura.getId() + "\nMonto: " + factura.getTotal();
+        // Generar QR
+        String qrData = "Factura ID: " + factura.getId() + "\nMonto: " + factura.getTotal() +
+                "\nReserva: " + reserva.getAlojamientoReservado().getNombre();
         String qrPath = "data/factura_" + factura.getId() + ".png";
         GeneradorQR.generarQR(qrData, qrPath);
+        factura.setQrPath(qrPath);
 
-        // Enviar correo
-        String mensaje = "Reserva realizada con éxito.\nMonto: " + monto + "\nFactura ID: " + factura.getId();
-        EnvioEmail.enviarNotificacion(usuario.getEmail(), "Confirmación de Reserva", mensaje);
+        // Guardar reserva
+        alojamiento.getReservasAlojamientoActivas().add(reserva);
+        reservaRepositorio.guardar(reserva);
+
+        // Enviar correo con QR
+        String mensaje = "Reserva realizada con éxito.\nMonto: " + montoConDescuento + "\nFactura ID: " + factura.getId();
+        EnvioEmail.enviarNotificacion(usuario.getEmail(), "Confirmación de Reserva", mensaje, qrPath);
     }
 }
