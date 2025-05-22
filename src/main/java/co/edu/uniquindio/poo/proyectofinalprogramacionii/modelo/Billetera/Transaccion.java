@@ -1,30 +1,26 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Billetera;
 
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Reserva;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.LinkedList;
 
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Cliente;
-import lombok.*;
-
-
-
-@Data
-@RequiredArgsConstructor
-public class Transaccion {
-    @NonNull private LocalDateTime fecha;
-    @NonNull private Billetera destinatario;
-    @NonNull private Billetera origen;
-    @NonNull private float monto;
+@Builder
+@Getter
+@Setter
+public class Transaccion implements Serializable {
+    private LocalDateTime fecha;
+    private double monto;
+    private Reserva reserva;
     private UUID identificador;
 
-    public String obtenerTipoTransaccion(Cliente clienteActual) {
-        return origen.getPropietario().equals(clienteActual) ? "Retiro" : "Depósito";
-    }
-
-    public Cliente obtenerUsuarioInvolucrado(Cliente clienteActual) {
-        return origen.getPropietario().equals(clienteActual) ? destinatario.getPropietario() : origen.getPropietario();
+    public Transaccion(LocalDateTime fecha, double monto, Reserva reserva) {
+        this.fecha = fecha;
+        this.monto = monto;
+        this.reserva = reserva;
+        this.identificador = UUID.randomUUID();
     }
 }

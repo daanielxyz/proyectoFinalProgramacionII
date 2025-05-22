@@ -7,4 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class Reseña {
     private String reseña;
+    private String id;
 }

@@ -1,52 +1,58 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo;
 
-
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-
-import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@RequiredArgsConstructor
-public abstract class Alojamiento {
-    //ATRIBUTOS NO OBLIGATORIOS
-        private double precioPorNocheTotal;
-        private List<Reseña> listaReseñas;
-        private List<Valoracion> listaValoraciones;
-        private List<Reserva> reservasAlojamientoHistoricas;
-        private List<Reserva> reservasAlojamientoActivas;
+@Getter
+@Setter
+public abstract class Alojamiento implements Serializable {
+    private double precioPorNocheTotal;
+    private List<Reseña> listaReseñas;
+    private List<Valoracion> listaValoraciones;
+    private List<Reserva> reservasAlojamientoHistoricas;
+    private List<Reserva> reservasAlojamientoActivas;
+    private String nombre;
+    private Ciudad ciudad;
+    private String descripcion;
+    private String imagen;
+    private double precioPorNoche;
+    private int huespedesMaximos;
+    private List<String> serviciosDisponibles;
 
-    //ATRIBUTOS OBLIGATORIOS
-        @NonNull private String nombre;
-        @NonNull private Ciudad ciudad;
-        @NonNull private String descripcion;
-        @NonNull private String imagen;
-        @NonNull private double precioPorNoche;
-        @NonNull private int huespedesMaximos;
-        @NonNull private List<String> serviciosDisponibles;
+    protected Alojamiento(double precioPorNocheTotal, String nombre, Ciudad ciudad, String descripcion, String imagen,
+                          double precioPorNoche, int huespedesMaximos, List<String> serviciosDisponibles) {
+        this.precioPorNocheTotal = precioPorNocheTotal;
+        this.nombre = nombre;
+        this.ciudad = ciudad;
+        this.descripcion = descripcion;
+        this.imagen = imagen;
+        this.precioPorNoche = precioPorNoche;
+        this.huespedesMaximos = huespedesMaximos;
+        this.serviciosDisponibles = serviciosDisponibles != null ? serviciosDisponibles : new ArrayList<>();
+        this.listaReseñas = new ArrayList<>();
+        this.listaValoraciones = new ArrayList<>();
+        this.reservasAlojamientoHistoricas = new ArrayList<>();
+        this.reservasAlojamientoActivas = new ArrayList<>();
+    }
 
-    //METODOS DEL ALOJAMIENTO
+    public void realizarReseña(String reseña) throws Exception {
+        if (reseña.isEmpty()) {
+            throw new Exception("La reseña no puede estar vacía");
+        }
+        listaReseñas.add(new Reseña(reseña, generarId()));
+    }
 
-        //REALIZAR RESEÑA
-            public void realizarReseña(String reseña) throws Exception {
-                if (reseña.isEmpty()) {
-                    throw new Exception("La reseña no puede estar vacía");
-                }
-                Reseña reseñaRealizada = new Reseña(reseña);
-                listaReseñas.add(reseñaRealizada);
-            }
+    public void realizarValoracion(int valoracion) throws Exception {
+        if (valoracion < 0 || valoracion > 5) {
+            throw new Exception("Ingrese una valoración entre 0 y 5");
+        }
+        listaValoraciones.add(new Valoracion(valoracion));
+    }
 
-        //REALIZAR VALORACIÓN
-            public void realizarValoracion(int valoracion) throws Exception{
-                if (valoracion < 0 || valoracion > 5) {
-                    throw new Exception("Ingrese una valoracion entre 0 y 5");
-                }
-                Valoracion valoracionRealizada = new Valoracion(valoracion);
-                listaValoraciones.add(valoracionRealizada);
-            }
-
-
-
+    private String generarId() {
+        return java.util.UUID.randomUUID().toString();
+    }
 }

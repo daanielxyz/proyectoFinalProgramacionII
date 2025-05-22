@@ -1,11 +1,15 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamientos.Habitacion;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@AllArgsConstructor
-public class Habitacion {
+import java.io.Serializable;
+
+@Getter
+@Setter
+@Builder
+public class Habitacion implements Serializable {
     private int numHabitacion;
     private double precio;
     private int capacidadMaximaHuespedes;

@@ -5,17 +5,23 @@ import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Ciudad;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Casa extends Alojamiento {
-    @Getter
-    @Setter
-    private double costoAseoYMantenimiento;
-    private double precioPorNocheTotal;
+@Getter
+@Setter
+public class Casa extends Alojamiento implements Serializable {
+    private double costoMantenimiento;
 
-    public Casa(String nombre, Ciudad ciudad, String descripcion, String imagen, double precioPorNoche, int huespedesMaximos, List<String> serviciosDisponibles, double costoAseoYMantenimiento){
-        super(nombre, ciudad, descripcion, imagen, precioPorNoche, huespedesMaximos, serviciosDisponibles);
-        this.costoAseoYMantenimiento = costoAseoYMantenimiento;
-        setPrecioPorNocheTotal(precioPorNoche + costoAseoYMantenimiento);
+    public Casa(double precioPorNoche, int huespedesMaximos, String nombre, Ciudad ciudad, String descripcion,
+                String imagen, List<String> serviciosDisponibles, double costoMantenimiento) {
+        super(precioPorNoche + costoMantenimiento, nombre, ciudad, descripcion, imagen, precioPorNoche,
+                huespedesMaximos, serviciosDisponibles);
+        this.costoMantenimiento = costoMantenimiento;
+    }
+
+    @Override
+    public double getPrecioPorNocheTotal() {
+        return getPrecioPorNoche() + costoMantenimiento;
     }
 }
