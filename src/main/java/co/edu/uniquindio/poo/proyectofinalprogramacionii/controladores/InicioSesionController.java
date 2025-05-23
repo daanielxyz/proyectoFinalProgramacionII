@@ -8,19 +8,30 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class InicioSesionController {
-    private final PlataformaServicio plataformaServicio;
+    private final ControladorPrincipal controladorPrincipal = ControladorPrincipal.getInstancia();
     private Stage stage;
+    private final Administrador admin = Administrador.getInstancia();
 
     @FXML
     private TextField txtEmail, txtContraseña;
 
+    @FXML
+    private ImageView imgLogo;
+
     public InicioSesionController() {
-        this.plataformaServicio = ControladorPrincipal.getInstancia().getPlataformaServicio();
+    }
+
+    @FXML
+    public void initialize() {
+        imgLogo.setImage(new Image(getClass().getResource("/images/logo.png").toExternalForm()));
+        controladorPrincipal.getPlataformaServicio().asignarAdministrador(admin);
     }
 
     public void setStage(Stage stage) {
@@ -30,14 +41,14 @@ public class InicioSesionController {
     @FXML
     private void iniciarSesion() {
         try {
-            Object persona = plataformaServicio.iniciarSesion(txtEmail.getText(), txtContraseña.getText());
+            Object persona = ControladorPrincipal.getInstancia().getPlataformaServicio().iniciarSesion(txtEmail.getText(), txtContraseña.getText());
             FXMLLoader loader;
             if (persona instanceof Administrador admin) {
-                loader = new FXMLLoader(getClass().getResource("/co/edu/uniquindio/poo/proyectofinalprogramacionii/Admin.fxml"));
-                loader.setController(new AdminController(plataformaServicio, admin));
+                loader = new FXMLLoader(getClass().getResource("/views/Admin.fxml"));
+                loader.setController(new AdminController(admin));
             } else if (persona instanceof Usuario usuario) {
-                loader = new FXMLLoader(getClass().getResource("/co/edu/uniquindio/poo/proyectofinalprogramacionii/Reserva.fxml"));
-                loader.setController(new ReservaController(plataformaServicio, usuario));
+                loader = new FXMLLoader(getClass().getResource("/views/Reserva.fxml"));
+                loader.setController(new ReservaController(usuario));
             } else {
                 throw new Exception("Tipo de usuario no reconocido");
             }
@@ -52,8 +63,8 @@ public class InicioSesionController {
     @FXML
     private void irARegistro() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/uniquindio/poo/proyectofinalprogramacionii/Registro.fxml"));
-            loader.setController(new RegistroController(plataformaServicio));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Registro.fxml"));
+            loader.setController(new RegistroController());
             Scene scene = new Scene(loader.load());
             stage.setScene(scene);
             RegistroController controller = loader.getController();

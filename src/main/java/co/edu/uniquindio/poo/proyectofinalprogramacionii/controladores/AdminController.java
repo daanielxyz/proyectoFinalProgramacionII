@@ -13,8 +13,9 @@ import javafx.scene.control.*;
 import java.util.List;
 
 public class AdminController {
-    private final IPlataformaServicio plataformaServicio;
-    private final Administrador admin;
+    private final ControladorPrincipal controladorPrincipal = ControladorPrincipal.getInstancia();
+    private final Administrador admin = Administrador.getInstancia();
+
 
     @FXML
     private TextField txtNombre, txtDescripcion, txtPrecioBase, txtHuespedesMax, txtCostoMantenimiento, txtHabitacionId, txtHabitacionPrecio, txtHabitacionCapacidad;
@@ -25,9 +26,7 @@ public class AdminController {
     @FXML
     private ListView<Alojamiento> lvAlojamientos;
 
-    public AdminController(IPlataformaServicio plataformaServicio, Administrador admin) {
-        this.plataformaServicio = plataformaServicio;
-        this.admin = admin;
+    public AdminController(Administrador admin) {
     }
 
     @FXML
@@ -35,6 +34,7 @@ public class AdminController {
         cbCiudad.setItems(FXCollections.observableArrayList(Ciudad.values()));
         cbTipoAlojamiento.setItems(FXCollections.observableArrayList("Casa", "Apartamento", "Hotel"));
         actualizarAlojamientos();
+        controladorPrincipal.getPlataformaServicio().asignarAdministrador(admin);
     }
 
     @FXML
@@ -57,7 +57,7 @@ public class AdminController {
                 alojamiento = new Hotel(nombre, ciudad, descripcion, null, precioBase, huespedesMax);
             }
 
-            plataformaServicio.gestionarAlojamiento(alojamiento, "CREAR", admin);
+            controladorPrincipal.getPlataformaServicio().gestionarAlojamiento(alojamiento, "CREAR", admin);
             new Alert(Alert.AlertType.INFORMATION, "Alojamiento creado").show();
             limpiarCampos();
             actualizarAlojamientos();
@@ -84,7 +84,7 @@ public class AdminController {
             } else if (alojamiento instanceof Apartamento apartamento) {
                 apartamento.setCostoMantenimiento(Double.parseDouble(txtCostoMantenimiento.getText()));
             }
-            plataformaServicio.gestionarAlojamiento(alojamiento, "ACTUALIZAR", admin);
+            controladorPrincipal.getPlataformaServicio().gestionarAlojamiento(alojamiento, "ACTUALIZAR", admin);
             new Alert(Alert.AlertType.INFORMATION, "Alojamiento actualizado").show();
             limpiarCampos();
             actualizarAlojamientos();
@@ -101,7 +101,7 @@ public class AdminController {
             return;
         }
         try {
-            plataformaServicio.gestionarAlojamiento(alojamiento, "ELIMINAR", admin);
+            controladorPrincipal.getPlataformaServicio().gestionarAlojamiento(alojamiento, "ELIMINAR", admin);
             new Alert(Alert.AlertType.INFORMATION, "Alojamiento eliminado").show();
             limpiarCampos();
             actualizarAlojamientos();
@@ -124,7 +124,7 @@ public class AdminController {
                     Integer.parseInt(txtHabitacionCapacidad.getText())
             );
             hotel.agregarHabitacion(habitacion);
-            plataformaServicio.gestionarAlojamiento(alojamiento, "ACTUALIZAR", admin);
+            controladorPrincipal.getPlataformaServicio().gestionarAlojamiento(alojamiento, "ACTUALIZAR", admin);
             new Alert(Alert.AlertType.INFORMATION, "Habitación añadida").show();
             limpiarCampos();
             actualizarAlojamientos();
@@ -157,7 +157,7 @@ public class AdminController {
 
     private void actualizarAlojamientos() {
         try {
-            List<Alojamiento> alojamientos = plataformaServicio.consultarAlojamientos(null);
+            List<Alojamiento> alojamientos = controladorPrincipal.getPlataformaServicio().consultarAlojamientos(null);
             lvAlojamientos.setItems(FXCollections.observableArrayList(alojamientos));
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();

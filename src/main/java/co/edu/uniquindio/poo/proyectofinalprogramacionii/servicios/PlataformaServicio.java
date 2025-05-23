@@ -135,4 +135,8 @@ public class PlataformaServicio implements IPlataformaServicio {
     public List<Oferta> listarOfertasPorAlojamiento(String alojamientoNombre){
         return ofertaServicio.listarOfertasPorAlojamiento(alojamientoNombre);
     }
+
+    public void asignarAdministrador(Administrador admin){
+        usuarioServicio.asignarAdministrador(admin);
+    }
 }

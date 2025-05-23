@@ -12,14 +12,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class RegistroController {
-    private final IPlataformaServicio plataformaServicio;
+    private final ControladorPrincipal controladorPrincipal = ControladorPrincipal.getInstancia();
     private Stage stage;
 
     @FXML
     private TextField txtCedula, txtNombre, txtTelefono, txtEmail, txtContraseña, txtCodigo;
 
-    public RegistroController(IPlataformaServicio plataformaServicio) {
-        this.plataformaServicio = plataformaServicio;
+    public RegistroController() {
     }
 
     public void setStage(Stage stage) {
@@ -36,7 +35,7 @@ public class RegistroController {
                     txtEmail.getText(),
                     txtContraseña.getText()
             );
-            plataformaServicio.registrarUsuario(usuario);
+            controladorPrincipal.getPlataformaServicio().registrarUsuario(usuario);
             new Alert(Alert.AlertType.INFORMATION, "Usuario registrado. Usa el código de activación: " + usuario.getCodigoActivacion()).show();
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
@@ -46,7 +45,7 @@ public class RegistroController {
     @FXML
     private void activarCuenta() {
         try {
-            plataformaServicio.activarCuenta(txtEmail.getText(), txtCodigo.getText());
+            controladorPrincipal.getPlataformaServicio().activarCuenta(txtEmail.getText(), txtCodigo.getText());
             new Alert(Alert.AlertType.INFORMATION, "Cuenta activada").show();
             volverAInicio();
         } catch (Exception e) {
@@ -57,7 +56,7 @@ public class RegistroController {
     @FXML
     private void volverAInicio() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/uniquindio/poo/proyectofinalprogramacionii/InicioSesion.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/InicioSesion.fxml"));
             loader.setController(new InicioSesionController());
             Scene scene = new Scene(loader.load());
             stage.setScene(scene);

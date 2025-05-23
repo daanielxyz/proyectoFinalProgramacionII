@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns="http://javafx.com/javafx/21" spacing="10" alignment="TOP_CENTER" prefWidth="600"
-      fx:controller="co.edu.uniquindio.poo.proyectofinalprogramacionii.controladores.AdminController">
+      xmlns:fx="http://javafx.com/fxml">
     <Label text="Panel de Administrador"/>
     <HBox spacing="10">
         <VBox spacing="10" prefWidth="300">

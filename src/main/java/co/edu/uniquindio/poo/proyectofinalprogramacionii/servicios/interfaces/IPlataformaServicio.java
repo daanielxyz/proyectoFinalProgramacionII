@@ -23,4 +23,5 @@ public interface IPlataformaServicio {
     void agregarValoracion(Alojamiento alojamiento, int valoracion, Usuario usuario) throws Exception;
     List<Alojamiento> buscarAlojamientosAleatorios();
     List<Oferta> listarOfertasPorAlojamiento(String alojamientoNombre);
+    void asignarAdministrador(Administrador admin);
 }

@@ -10,7 +10,7 @@ module co.edu.uniquindio.poo.proyectofinalprogramacionii {
     requires jbcrypt;
     requires java.desktop;
 
-
+    opens co.edu.uniquindio.poo.proyectofinalprogramacionii.controladores to javafx.fxml;
     opens co.edu.uniquindio.poo.proyectofinalprogramacionii to javafx.fxml;
     exports co.edu.uniquindio.poo.proyectofinalprogramacionii;
 }

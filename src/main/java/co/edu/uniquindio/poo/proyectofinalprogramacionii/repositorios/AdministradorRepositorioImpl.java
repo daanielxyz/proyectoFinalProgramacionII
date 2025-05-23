@@ -25,4 +25,6 @@ public class AdministradorRepositorioImpl implements AdministradorRepositorio {
     public boolean existeAdmin() {
         return !administradores.isEmpty();
     }
+
+
 }

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class ReservaController {
-    private final IPlataformaServicio plataformaServicio;
+    private final ControladorPrincipal controladorPrincipal = ControladorPrincipal.getInstancia();
     private final Usuario usuario;
     private Stage stage;
 
@@ -33,8 +33,7 @@ public class ReservaController {
     @FXML
     private Label lblSaldo;
 
-    public ReservaController(IPlataformaServicio plataformaServicio, Usuario usuario) {
-        this.plataformaServicio = plataformaServicio;
+    public ReservaController(Usuario usuario) {
         this.usuario = usuario;
     }
 
@@ -57,7 +56,7 @@ public class ReservaController {
             return;
         }
         try {
-            List<Alojamiento> alojamientos = plataformaServicio.consultarAlojamientos(ciudad);
+            List<Alojamiento> alojamientos = controladorPrincipal.getPlataformaServicio().consultarAlojamientos(ciudad);
             lvAlojamientos.setItems(FXCollections.observableArrayList(alojamientos));
             lvHabitaciones.setItems(FXCollections.observableArrayList());
         } catch (Exception e) {
@@ -103,7 +102,7 @@ public class ReservaController {
                     huespedes,
                     habitacion
             );
-            plataformaServicio.crearReserva(reserva, usuario, habitacion);
+            controladorPrincipal.getPlataformaServicio().crearReserva(reserva, usuario, habitacion);
             new Alert(Alert.AlertType.INFORMATION, "Reserva creada").show();
             lblSaldo.setText("Saldo: $" + usuario.getBilletera().getSaldo());
             actualizarReservas();
@@ -120,7 +119,7 @@ public class ReservaController {
             return;
         }
         try {
-            plataformaServicio.cancelarReserva(reserva, usuario);
+            controladorPrincipal.getPlataformaServicio().cancelarReserva(reserva, usuario);
             new Alert(Alert.AlertType.INFORMATION, "Reserva cancelada").show();
             actualizarReservas();
         } catch (Exception e) {
@@ -137,7 +136,7 @@ public class ReservaController {
             return;
         }
         try {
-            plataformaServicio.agregarReseña(alojamiento, reseña, usuario);
+            controladorPrincipal.getPlataformaServicio().agregarReseña(alojamiento, reseña, usuario);
             new Alert(Alert.AlertType.INFORMATION, "Reseña añadida").show();
             txtReseña.clear();
         } catch (Exception e) {
@@ -158,7 +157,7 @@ public class ReservaController {
             if (valoracion < 1 || valoracion > 5) {
                 throw new Exception("La valoración debe estar entre 1 y 5");
             }
-            plataformaServicio.agregarValoracion(alojamiento, valoracion, usuario);
+            controladorPrincipal.getPlataformaServicio().agregarValoracion(alojamiento, valoracion, usuario);
             new Alert(Alert.AlertType.INFORMATION, "Valoración añadida").show();
             txtValoracion.clear();
         } catch (Exception e) {
@@ -174,7 +173,7 @@ public class ReservaController {
         dialog.showAndWait().ifPresent(montoText -> {
             try {
                 double monto = Double.parseDouble(montoText);
-                plataformaServicio.recargarBilletera(usuario, monto);
+                controladorPrincipal.getPlataformaServicio().recargarBilletera(usuario, monto);
                 new Alert(Alert.AlertType.INFORMATION, "Billetera recargada").show();
                 lblSaldo.setText("Saldo: $" + usuario.getBilletera().getSaldo());
             } catch (Exception e) {
@@ -185,7 +184,7 @@ public class ReservaController {
 
     private void actualizarReservas() {
         try {
-            List<Reserva> reservas = plataformaServicio.consultarReservasUsuario(usuario);
+            List<Reserva> reservas = controladorPrincipal.getPlataformaServicio().consultarReservasUsuario(usuario);
             lvReservas.setItems(FXCollections.observableArrayList(reservas));
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();

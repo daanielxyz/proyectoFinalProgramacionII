@@ -11,6 +11,10 @@ public class UsuarioServicio {
     private final AdministradorRepositorioImpl administradorRepositorio;
     private final BilleteraServicio billeteraServicio;
 
+    public void asignarAdministrador(Administrador admin){
+        administradorRepositorio.guardarAdministrador(admin);
+    }
+
     public UsuarioServicio() {
         this.usuarioRepositorio = new UsuarioRepositorioImpl();
         this.administradorRepositorio = new AdministradorRepositorioImpl();

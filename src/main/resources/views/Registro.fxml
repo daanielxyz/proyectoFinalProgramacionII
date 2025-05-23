@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns="http://javafx.com/javafx/21" spacing="10" alignment="CENTER" prefWidth="300"
-      fx:controller="co.edu.uniquindio.poo.proyectofinalprogramacionii.controladores.RegistroController">
+      xmlns:fx="http://javafx.com/fxml">
     <Label text="Registro de Usuario"/>
     <TextField fx:id="txtCedula" promptText="Cédula"/>
     <TextField fx:id="txtNombre" promptText="Nombre"/>
