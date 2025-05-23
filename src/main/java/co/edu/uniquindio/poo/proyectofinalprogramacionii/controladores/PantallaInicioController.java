@@ -58,7 +58,7 @@ public class PantallaInicioController {
             List<Alojamiento> alojamientos = controladorPrincipal.getPlataformaServicio().buscarAlojamientosAleatorios()
                     .stream()
                     .filter(a -> a.getNombre().toLowerCase().contains(busqueda) ||
-                            a.getCiudad().getNombre().toLowerCase().contains(busqueda) ||
+                            a.getCiudad().toString().toLowerCase().contains(busqueda) ||
                             a.getClass().getSimpleName().toLowerCase().contains(busqueda) ||
                             String.valueOf(a.getPrecioPorNocheTotal()).contains(busqueda))
                     .collect(Collectors.toList());

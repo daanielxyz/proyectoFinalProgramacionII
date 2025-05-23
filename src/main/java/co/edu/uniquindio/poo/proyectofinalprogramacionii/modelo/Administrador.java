@@ -1,13 +1,18 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
+@Getter
+@Setter
 public class Administrador implements Serializable {
     private static Administrador instancia;
     private String email = "admin@bookyourstay.com";
-    private String contrasena = "admin123";
-
-    private Administrador() {}
+    private String contraseña = "admin123";
+    private String codigoActivacion;
+    private boolean cuentaActiva;
 
     public static Administrador getInstancia() {
         if (instancia == null) {
@@ -16,15 +21,9 @@ public class Administrador implements Serializable {
         return instancia;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getContrasena() {
-        return contrasena;
-    }
-
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
+    public Administrador() {
+        this.email = email;
+        this.contraseña = contraseña;
+        this.cuentaActiva = true;
     }
 }

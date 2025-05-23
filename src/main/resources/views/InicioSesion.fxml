@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/21" spacing="10" alignment="CENTER" prefWidth="300" xmlns:fx="http://javafx.com/fxml">
+    <Label text="Iniciar Sesión"/>
+    <TextField fx:id="txtEmail" promptText="Email"/>
+    <PasswordField fx:id="txtContraseña" promptText="Contraseña"/>
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="Iniciar Sesión" onAction="#iniciarSesion"/>
+        <Button text="Registrarse" onAction="#irARegistro"/>
+    </HBox>
+</VBox>

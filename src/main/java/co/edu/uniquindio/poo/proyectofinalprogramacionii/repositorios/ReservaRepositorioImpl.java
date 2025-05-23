@@ -1,50 +1,29 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios;
 
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Reserva;
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.utils.Constantes;
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.utils.Persistencia;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Usuario;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReservaRepositorioImpl implements ReservaRepositorio {
-    private List<Reserva> reservas;
-
-    public ReservaRepositorioImpl() {
-        this.reservas = leerDatos();
-    }
-
-    private List<Reserva> leerDatos() {
-        try {
-            Object datos = Persistencia.deserializarObjeto(Constantes.RUTA_RESERVAS);
-            return datos != null ? (List<Reserva>) datos : new ArrayList<>();
-        } catch (Exception e) {
-            return new ArrayList<>();
-        }
-    }
-
-    private void guardarDatos() {
-        try {
-            Persistencia.serializarObjeto(Constantes.RUTA_RESERVAS, reservas);
-        } catch (Exception e) {
-        }
-    }
+    private final List<Reserva> reservas = new ArrayList<>();
 
     @Override
     public void guardar(Reserva reserva) {
         reservas.add(reserva);
-        guardarDatos();
     }
 
     @Override
-    public Reserva buscarPorId(String id) {
+    public void eliminar(Reserva reserva) {
+        reservas.remove(reserva);
+    }
+
+    @Override
+    public List<Reserva> listarPorUsuario(Usuario usuario) {
         return reservas.stream()
-                .filter(r -> r.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
-
-    @Override
-    public List<Reserva> listarTodas() {
-        return new ArrayList<>(reservas);
+                .filter(r -> r.getUsuario().equals(usuario))
+                .collect(Collectors.toList());
     }
 }

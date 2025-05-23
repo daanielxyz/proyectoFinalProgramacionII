@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/21" spacing="10" alignment="TOP_CENTER" prefWidth="600"
+      fx:controller="co.edu.uniquindio.poo.proyectofinalprogramacionii.controladores.AdminController">
+    <Label text="Panel de Administrador"/>
+    <HBox spacing="10">
+        <VBox spacing="10" prefWidth="300">
+            <Label text="Crear/Actualizar Alojamiento"/>
+            <TextField fx:id="txtNombre" promptText="Nombre"/>
+            <ComboBox fx:id="cbCiudad" promptText="Ciudad"/>
+            <TextField fx:id="txtDescripcion" promptText="Descripción"/>
+            <TextField fx:id="txtPrecioBase" promptText="Precio Base por Noche"/>
+            <TextField fx:id="txtHuespedesMax" promptText="Huéspedes Máximos"/>
+            <ComboBox fx:id="cbTipoAlojamiento" promptText="Tipo"/>
+            <TextField fx:id="txtCostoMantenimiento" promptText="Costo Mantenimiento (Casa/Apartamento)"/>
+            <HBox spacing="10">
+                <Button text="Crear" onAction="#crearAlojamiento"/>
+                <Button text="Actualizar" onAction="#actualizarAlojamiento"/>
+            </HBox>
+            <Label text="Añadir Habitación (Hotel)"/>
+            <TextField fx:id="txtHabitacionId" promptText="ID Habitación"/>
+            <TextField fx:id="txtHabitacionPrecio" promptText="Precio Habitación"/>
+            <TextField fx:id="txtHabitacionCapacidad" promptText="Capacidad Habitación"/>
+            <Button text="Añadir Habitación" onAction="#agregarHabitacion"/>
+        </VBox>
+        <VBox spacing="10" prefWidth="300">
+            <Label text="Alojamientos"/>
+            <ListView fx:id="lvAlojamientos" onMouseClicked="#seleccionarAlojamiento"/>
+            <Button text="Eliminar" onAction="#eliminarAlojamiento"/>
+        </VBox>
+    </HBox>
+</VBox>

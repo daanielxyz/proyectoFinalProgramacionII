@@ -3,15 +3,16 @@ package co.edu.uniquindio.poo.proyectofinalprogramacionii.servicios;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamiento;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Oferta;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.OfertaRepositorio;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.OfertaRepositorioImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class OfertaServicio {
-    private final OfertaRepositorio ofertaRepositorio;
+    private final OfertaRepositorioImpl ofertaRepositorio;
 
-    public OfertaServicio(OfertaRepositorio ofertaRepositorio) {
-        this.ofertaRepositorio = ofertaRepositorio;
+    public OfertaServicio() {
+        this.ofertaRepositorio = new OfertaRepositorioImpl();
     }
 
     public void crearOferta(Oferta oferta) {

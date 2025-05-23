@@ -1,0 +1,194 @@
+package co.edu.uniquindio.poo.proyectofinalprogramacionii.controladores;
+
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.*;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamientos.Habitacion.Habitacion;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamientos.Hotel;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.servicios.interfaces.IPlataformaServicio;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+
+public class ReservaController {
+    private final IPlataformaServicio plataformaServicio;
+    private final Usuario usuario;
+    private Stage stage;
+
+    @FXML
+    private ComboBox<Ciudad> cbCiudad;
+    @FXML
+    private ListView<Alojamiento> lvAlojamientos;
+    @FXML
+    private ListView<Habitacion> lvHabitaciones;
+    @FXML
+    private DatePicker dpFechaEntrada, dpFechaSalida;
+    @FXML
+    private TextField txtHuespedes, txtReseña, txtValoracion;
+    @FXML
+    private ListView<Reserva> lvReservas;
+    @FXML
+    private Label lblSaldo;
+
+    public ReservaController(IPlataformaServicio plataformaServicio, Usuario usuario) {
+        this.plataformaServicio = plataformaServicio;
+        this.usuario = usuario;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    @FXML
+    private void initialize() {
+        cbCiudad.setItems(FXCollections.observableArrayList(Ciudad.values()));
+        lblSaldo.setText("Saldo: $" + usuario.getBilletera().getSaldo());
+        actualizarReservas();
+    }
+
+    @FXML
+    private void buscarAlojamientos() {
+        Ciudad ciudad = cbCiudad.getValue();
+        if (ciudad == null) {
+            new Alert(Alert.AlertType.WARNING, "Selecciona una ciudad").show();
+            return;
+        }
+        try {
+            List<Alojamiento> alojamientos = plataformaServicio.consultarAlojamientos(ciudad);
+            lvAlojamientos.setItems(FXCollections.observableArrayList(alojamientos));
+            lvHabitaciones.setItems(FXCollections.observableArrayList());
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    private void mostrarHabitaciones() {
+        Alojamiento alojamiento = lvAlojamientos.getSelectionModel().getSelectedItem();
+        if (alojamiento instanceof Hotel hotel) {
+            lvHabitaciones.setItems(FXCollections.observableArrayList(hotel.getHabitaciones()));
+        } else {
+            lvHabitaciones.setItems(FXCollections.observableArrayList());
+        }
+    }
+
+    @FXML
+    private void crearReserva() {
+        try {
+            Alojamiento alojamiento = lvAlojamientos.getSelectionModel().getSelectedItem();
+            Habitacion habitacion = lvHabitaciones.getSelectionModel().getSelectedItem();
+            LocalDate fechaEntrada = dpFechaEntrada.getValue();
+            LocalDate fechaSalida = dpFechaSalida.getValue();
+            int huespedes = Integer.parseInt(txtHuespedes.getText());
+
+            if (alojamiento == null || fechaEntrada == null || fechaSalida == null || huespedes <= 0) {
+                throw new Exception("Completa todos los campos");
+            }
+            if (fechaEntrada.isBefore(LocalDate.now()) || fechaSalida.isBefore(fechaEntrada)) {
+                throw new Exception("Fechas inválidas");
+            }
+            if (alojamiento instanceof Hotel && habitacion == null) {
+                throw new Exception("Selecciona una habitación para el hotel");
+            }
+
+            Reserva reserva = new Reserva(
+                    UUID.randomUUID().toString(),
+                    fechaEntrada,
+                    fechaSalida,
+                    usuario,
+                    alojamiento,
+                    huespedes,
+                    habitacion
+            );
+            plataformaServicio.crearReserva(reserva, usuario, habitacion);
+            new Alert(Alert.AlertType.INFORMATION, "Reserva creada").show();
+            lblSaldo.setText("Saldo: $" + usuario.getBilletera().getSaldo());
+            actualizarReservas();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    private void cancelarReserva() {
+        Reserva reserva = lvReservas.getSelectionModel().getSelectedItem();
+        if (reserva == null) {
+            new Alert(Alert.AlertType.WARNING, "Selecciona una reserva").show();
+            return;
+        }
+        try {
+            plataformaServicio.cancelarReserva(reserva, usuario);
+            new Alert(Alert.AlertType.INFORMATION, "Reserva cancelada").show();
+            actualizarReservas();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    private void agregarReseña() {
+        Alojamiento alojamiento = lvAlojamientos.getSelectionModel().getSelectedItem();
+        String reseña = txtReseña.getText();
+        if (alojamiento == null || reseña.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Selecciona un alojamiento y escribe una reseña").show();
+            return;
+        }
+        try {
+            plataformaServicio.agregarReseña(alojamiento, reseña, usuario);
+            new Alert(Alert.AlertType.INFORMATION, "Reseña añadida").show();
+            txtReseña.clear();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    private void agregarValoracion() {
+        Alojamiento alojamiento = lvAlojamientos.getSelectionModel().getSelectedItem();
+        String valoracionText = txtValoracion.getText();
+        if (alojamiento == null || valoracionText.isEmpty()) {
+            new Alert(Alert.AlertType.WARNING, "Selecciona un alojamiento y escribe una valoración").show();
+            return;
+        }
+        try {
+            int valoracion = Integer.parseInt(valoracionText);
+            if (valoracion < 1 || valoracion > 5) {
+                throw new Exception("La valoración debe estar entre 1 y 5");
+            }
+            plataformaServicio.agregarValoracion(alojamiento, valoracion, usuario);
+            new Alert(Alert.AlertType.INFORMATION, "Valoración añadida").show();
+            txtValoracion.clear();
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    private void recargarBilletera() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Recargar Billetera");
+        dialog.setContentText("Monto:");
+        dialog.showAndWait().ifPresent(montoText -> {
+            try {
+                double monto = Double.parseDouble(montoText);
+                plataformaServicio.recargarBilletera(usuario, monto);
+                new Alert(Alert.AlertType.INFORMATION, "Billetera recargada").show();
+                lblSaldo.setText("Saldo: $" + usuario.getBilletera().getSaldo());
+            } catch (Exception e) {
+                new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+            }
+        });
+    }
+
+    private void actualizarReservas() {
+        try {
+            List<Reserva> reservas = plataformaServicio.consultarReservasUsuario(usuario);
+            lvReservas.setItems(FXCollections.observableArrayList(reservas));
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+}

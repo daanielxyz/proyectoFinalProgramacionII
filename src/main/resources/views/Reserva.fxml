@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/21" spacing="10" alignment="TOP_CENTER" prefWidth="600"
+      fx:controller="co.edu.uniquindio.poo.proyectofinalprogramacionii.controladores.ReservaController">
+    <Label text="Gestión de Reservas"/>
+    <Label fx:id="lblSaldo"/>
+    <Button text="Recargar Billetera" onAction="#recargarBilletera"/>
+    <HBox spacing="10">
+        <VBox spacing="10" prefWidth="300">
+            <Label text="Buscar Alojamientos"/>
+            <ComboBox fx:id="cbCiudad" promptText="Ciudad"/>
+            <Button text="Buscar" onAction="#buscarAlojamientos"/>
+            <ListView fx:id="lvAlojamientos" onMouseClicked="#mostrarHabitaciones"/>
+            <ListView fx:id="lvHabitaciones"/>
+            <Label text="Crear Reserva"/>
+            <DatePicker fx:id="dpFechaEntrada" promptText="Fecha Entrada"/>
+            <DatePicker fx:id="dpFechaSalida" promptText="Fecha Salida"/>
+            <TextField fx:id="txtHuespedes" promptText="Nº Huéspedes"/>
+            <Button text="Reservar" onAction="#crearReserva"/>
+        </VBox>
+        <VBox spacing="10" prefWidth="300">
+            <Label text="Mis Reservas"/>
+            <ListView fx:id="lvReservas"/>
+            <Button text="Cancelar Reserva" onAction="#cancelarReserva"/>
+            <Label text="Reseñas y Valoraciones"/>
+            <TextField fx:id="txtReseña" promptText="Escribe una reseña"/>
+            <Button text="Añadir Reseña" onAction="#agregarReseña"/>
+            <TextField fx:id="txtValoracion" promptText="Valoración (1-5)"/>
+            <Button text="Añadir Valoración" onAction="#agregarValoracion"/>
+        </VBox>
+    </HBox>
+</VBox>

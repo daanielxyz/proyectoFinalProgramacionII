@@ -38,7 +38,7 @@ public class BilleteraRepositorioImpl implements BilleteraRepositorio {
     @Override
     public Billetera buscarPorPropietario(String emailPropietario) {
         return billeteras.stream()
-                .filter(b -> b.getPropietario().getEmail().equals(emailPropietario))
+                .filter(b -> b.getUsuario().getEmail().equals(emailPropietario))
                 .findFirst()
                 .orElse(null);
     }
@@ -46,7 +46,7 @@ public class BilleteraRepositorioImpl implements BilleteraRepositorio {
     @Override
     public void actualizar(Billetera billetera) {
         for (int i = 0; i < billeteras.size(); i++) {
-            if (billeteras.get(i).getPropietario().getEmail().equals(billetera.getPropietario().getEmail())) {
+            if (billeteras.get(i).getUsuario().getEmail().equals(billetera.getUsuario().getEmail())) {
                 billeteras.set(i, billetera);
                 guardarDatos();
                 break;

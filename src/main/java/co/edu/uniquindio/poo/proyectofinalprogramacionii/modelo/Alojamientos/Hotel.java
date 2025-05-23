@@ -6,22 +6,30 @@ import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Ciudad;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
-public class Hotel extends Alojamiento implements Serializable {
+public class Hotel extends Alojamiento {
     private List<Habitacion> habitaciones;
 
-    public Hotel(double precioPorNoche, int huespedesMaximos, String nombre, Ciudad ciudad, String descripcion,
-                 String imagen, List<String> serviciosDisponibles, List<Habitacion> habitaciones) {
-        super(0.0, nombre, ciudad, descripcion, imagen, precioPorNoche, huespedesMaximos, serviciosDisponibles);
-        this.habitaciones = habitaciones != null ? habitaciones : new ArrayList<>();
+    public Hotel(String nombre, Ciudad ciudad, String descripcion, String imagen,
+                 double precioPorNocheBase, int huespedesMaximos) {
+        super(nombre, ciudad, descripcion, imagen, precioPorNocheBase, huespedesMaximos);
+        this.habitaciones = new ArrayList<>();
+    }
+
+    @Override
+    public double getPrecioPorNocheTotal() {
+        return getPrecioPorNocheBase();
     }
 
     public double getPrecioPorNocheTotal(Habitacion habitacion) {
-        return habitacion != null ? habitacion.getPrecio() : 0.0;
+        return habitacion.getPrecio();
+    }
+
+    public void agregarHabitacion(Habitacion habitacion) {
+        habitaciones.add(habitacion);
     }
 }

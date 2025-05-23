@@ -1,36 +1,41 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.servicios;
 
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamiento;
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.AlojamientoRepositorio;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.*;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.*;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class AlojamientoServicio {
-    private final AlojamientoRepositorio alojamientoRepositorio;
+    private final AlojamientoRepositorioImpl alojamientoRepositorio;
 
-    public AlojamientoServicio(AlojamientoRepositorio alojamientoRepositorio) {
-        this.alojamientoRepositorio = alojamientoRepositorio;
+    public AlojamientoServicio() {
+        this.alojamientoRepositorio = new AlojamientoRepositorioImpl();
     }
 
-    public void crearAlojamiento(Alojamiento alojamiento) {
-        if (alojamientoRepositorio.buscarPorNombre(alojamiento.getNombre()) != null) {
-            throw new IllegalArgumentException("El alojamiento ya existe");
-        }
+    public void crearAlojamiento(Alojamiento alojamiento) throws Exception {
         alojamientoRepositorio.guardar(alojamiento);
     }
 
-    public List<Alojamiento> buscarAlojamientosAleatorios() {
-        return alojamientoRepositorio.listarTodos();
+    public void actualizarAlojamiento(Alojamiento alojamiento) throws Exception {
+        alojamientoRepositorio.actualizar(alojamiento);
     }
 
-    public List<Alojamiento> buscarAlojamientos(String nombre, String tipo, String ciudad, Double precioMin, Double precioMax) {
-        return alojamientoRepositorio.listarTodos().stream()
-                .filter(a -> (nombre == null || a.getNombre().toLowerCase().contains(nombre.toLowerCase())))
-                .filter(a -> (tipo == null || a.getClass().getSimpleName().toLowerCase().contains(tipo.toLowerCase())))
-                .filter(a -> (ciudad == null || a.getCiudad().getNombre().toLowerCase().contains(ciudad.toLowerCase())))
-                .filter(a -> (precioMin == null || a.getPrecioPorNocheTotal() >= precioMin))
-                .filter(a -> (precioMax == null || a.getPrecioPorNocheTotal() <= precioMax))
-                .collect(Collectors.toList());
+    public void eliminarAlojamiento(Alojamiento alojamiento) throws Exception {
+        if (!alojamiento.getReservasAlojamientoActivas().isEmpty()) {
+            throw new Exception("No se puede eliminar un alojamiento con reservas activas");
+        }
+        alojamientoRepositorio.eliminar(alojamiento);
+    }
+
+    public List<Alojamiento> consultarAlojamientos(Ciudad ciudad) {
+        return alojamientoRepositorio.listarPorCiudad(ciudad);
+    }
+
+    public List<Alojamiento> buscarAlojamientosAleatorios(){
+        List<Alojamiento> alojamientosIniciales = alojamientoRepositorio.listarTodos();
+        Collections.shuffle(alojamientosIniciales);
+        return alojamientosIniciales.subList(0, 3);
     }
 }

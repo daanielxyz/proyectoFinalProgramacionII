@@ -1,75 +1,130 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.servicios;
 
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Billetera.Billetera;
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Usuario;
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.UsuarioRepositorio;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.*;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.*;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.utils.EnvioEmail;
-import org.mindrot.jbcrypt.BCrypt;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class UsuarioServicio {
-    private final UsuarioRepositorio usuarioRepositorio;
-    private final Map<String, String> codigosCambioContrasena = new HashMap<>();
+    private final UsuarioRepositorioImpl usuarioRepositorio;
+    private final AdministradorRepositorioImpl administradorRepositorio;
+    private final BilleteraServicio billeteraServicio;
 
-    public UsuarioServicio(UsuarioRepositorio usuarioRepositorio) {
-        this.usuarioRepositorio = usuarioRepositorio;
+    public UsuarioServicio() {
+        this.usuarioRepositorio = new UsuarioRepositorioImpl();
+        this.administradorRepositorio = new AdministradorRepositorioImpl();
+        this.billeteraServicio = new BilleteraServicio();
     }
 
-    public void registrarUsuario(Usuario usuario, String codigoActivacion) {
-        if (usuarioRepositorio.buscarPorEmail(usuario.getEmail()) != null) {
-            throw new IllegalArgumentException("El email ya está registrado");
+    public void registrarUsuario(Usuario usuario) throws Exception {
+        if (usuarioRepositorio.buscarUsuarioPorEmail(usuario.getEmail()) != null ||
+                administradorRepositorio.buscarAdministradorPorEmail(usuario.getEmail()) != null) {
+            throw new Exception("El email ya está registrado");
         }
-        usuario.setContrasena(BCrypt.hashpw(usuario.getContrasena(), BCrypt.gensalt()));
-        usuario.setActivo(false);
-        usuario.setBilletera(Billetera.builder().saldo(0).propietario(usuario).build());
-        usuarioRepositorio.guardar(usuario);
-        EnvioEmail.enviarNotificacion(usuario.getEmail(), "Código de activación", "Tu código es: " + codigoActivacion);
+        String codigoActivacion = UUID.randomUUID().toString();
+        usuario.setCodigoActivacion(codigoActivacion);
+        usuarioRepositorio.guardarUsuario(usuario);
+        EnvioEmail.enviarNotificacion(usuario.getEmail(), "Activación de Cuenta",
+                "Tu código de activación es: " + codigoActivacion);
     }
 
-    public void activarUsuario(String email, String codigoActivacion) {
-        Usuario usuario = usuarioRepositorio.buscarPorEmail(email);
+    public void registrarAdministrador(Administrador admin) throws Exception {
+        if (administradorRepositorio.existeAdmin()) {
+            throw new Exception("Ya existe un administrador");
+        }
+        if (usuarioRepositorio.buscarUsuarioPorEmail(admin.getEmail()) != null ||
+                administradorRepositorio.buscarAdministradorPorEmail(admin.getEmail()) != null) {
+            throw new Exception("El email ya está registrado");
+        }
+        administradorRepositorio.guardarAdministrador(admin);
+    }
+
+    public void activarCuenta(String email, String codigo) throws Exception {
+        Usuario usuario = usuarioRepositorio.buscarUsuarioPorEmail(email);
         if (usuario == null) {
-            throw new IllegalArgumentException("Usuario no encontrado");
+            throw new Exception("Usuario no encontrado");
         }
-        usuario.setActivo(true);
-        usuarioRepositorio.actualizar(usuario);
+        if (!usuario.getCodigoActivacion().equals(codigo)) {
+            throw new Exception("Código de activación incorrecto");
+        }
+        usuario.setCuentaActiva(true);
+        usuarioRepositorio.actualizarUsuario(usuario);
     }
 
-    public Usuario iniciarSesion(String email, String contrasena) {
-        Usuario usuario = usuarioRepositorio.buscarPorEmail(email);
-        if (usuario == null || !BCrypt.checkpw(contrasena, usuario.getContrasena())) {
-            throw new IllegalArgumentException("Email o contraseña incorrectos");
+    public Object iniciarSesion(String email, String contraseña) throws Exception {
+        Usuario usuario = usuarioRepositorio.buscarUsuarioPorEmail(email);
+        if (usuario != null) {
+            if (!usuario.getContraseña().equals(contraseña)) {
+                throw new Exception("Credenciales incorrectas");
+            }
+            if (!usuario.isCuentaActiva()) {
+                throw new Exception("La cuenta no está activada");
+            }
+            return usuario;
         }
-        if (!usuario.isActivo()) {
-            throw new IllegalArgumentException("Cuenta no activada");
+        Administrador admin = administradorRepositorio.buscarAdministradorPorEmail(email);
+        if (admin != null) {
+            if (!admin.getContraseña().equals(contraseña)) {
+                throw new Exception("Credenciales incorrectas");
+            }
+            return admin;
         }
-        return usuario;
+        throw new Exception("Credenciales incorrectas");
     }
 
-    public void solicitarCambioContrasena(String email) {
-        Usuario usuario = usuarioRepositorio.buscarPorEmail(email);
-        if (usuario == null) {
-            throw new IllegalArgumentException("Usuario no encontrado");
+    public void editarUsuario(Usuario usuario) throws Exception {
+        if (usuarioRepositorio.buscarUsuarioPorEmail(usuario.getEmail()) == null) {
+            throw new Exception("Usuario no encontrado");
         }
-        String codigo = UUID.randomUUID().toString().substring(0, 6);
-        codigosCambioContrasena.put(email, codigo);
-        EnvioEmail.enviarNotificacion(email, "Código de cambio de contraseña", "Tu código es: " + codigo);
+        usuarioRepositorio.actualizarUsuario(usuario);
     }
 
-    public void cambiarContrasena(String email, String codigo, String nuevaContrasena) {
-        String codigoAlmacenado = codigosCambioContrasena.get(email);
-        if (codigoAlmacenado == null || !codigoAlmacenado.equals(codigo)) {
-            throw new IllegalArgumentException("Código de verificación inválido");
+    public void eliminarUsuario(String email) throws Exception {
+        if (usuarioRepositorio.buscarUsuarioPorEmail(email) == null) {
+            throw new Exception("Usuario no encontrado");
         }
-        Usuario usuario = usuarioRepositorio.buscarPorEmail(email);
-        if (usuario == null) {
-            throw new IllegalArgumentException("Usuario no encontrado");
+        usuarioRepositorio.eliminarUsuario(email);
+    }
+
+    public void solicitarCambioContraseña(String email) throws Exception {
+        Usuario usuario = usuarioRepositorio.buscarUsuarioPorEmail(email);
+        Administrador admin = administradorRepositorio.buscarAdministradorPorEmail(email);
+        if (usuario == null && admin == null) {
+            throw new Exception("Usuario no encontrado");
         }
-        usuario.setContrasena(BCrypt.hashpw(nuevaContrasena, BCrypt.gensalt()));
-        usuarioRepositorio.actualizar(usuario);
-        codigosCambioContrasena.remove(email);
+        String codigo = UUID.randomUUID().toString();
+        if (usuario != null) {
+            usuario.setCodigoActivacion(codigo);
+            usuarioRepositorio.actualizarUsuario(usuario);
+        } else {
+            admin.setCodigoActivacion(codigo);
+            administradorRepositorio.guardarAdministrador(admin);
+        }
+        EnvioEmail.enviarNotificacion(email, "Cambio de Contraseña",
+                "Tu código para cambiar contraseña es: " + codigo);
+    }
+
+    public void cambiarContraseña(String email, String codigo, String nuevaContraseña) throws Exception {
+        Usuario usuario = usuarioRepositorio.buscarUsuarioPorEmail(email);
+        Administrador admin = administradorRepositorio.buscarAdministradorPorEmail(email);
+        if (usuario == null && admin == null) {
+            throw new Exception("Usuario no encontrado");
+        }
+        if (usuario != null) {
+            if (!usuario.getCodigoActivacion().equals(codigo)) {
+                throw new Exception("Código incorrecto");
+            }
+            usuario.setContraseña(nuevaContraseña);
+            usuario.setCodigoActivacion(null);
+            usuarioRepositorio.actualizarUsuario(usuario);
+        } else {
+            if (!admin.getCodigoActivacion().equals(codigo)) {
+                throw new Exception("Código incorrecto");
+            }
+            admin.setContraseña(nuevaContraseña);
+            admin.setCodigoActivacion(null);
+            administradorRepositorio.guardarAdministrador(admin);
+        }
     }
 }

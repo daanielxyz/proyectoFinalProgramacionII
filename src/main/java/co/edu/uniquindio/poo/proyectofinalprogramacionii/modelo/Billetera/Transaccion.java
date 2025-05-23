@@ -1,26 +1,26 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Billetera;
 
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Reserva;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
-@Builder
 @Getter
 @Setter
 public class Transaccion implements Serializable {
-    private LocalDateTime fecha;
+    private String id;
     private double monto;
+    private LocalDateTime fecha;
+    private String tipo;
     private Reserva reserva;
-    private UUID identificador;
 
-    public Transaccion(LocalDateTime fecha, double monto, Reserva reserva) {
-        this.fecha = fecha;
+    public Transaccion(String id, double monto, String tipo, Reserva reserva) {
+        this.id = id;
         this.monto = monto;
+        this.fecha = LocalDateTime.now();
+        this.tipo = tipo;
         this.reserva = reserva;
-        this.identificador = UUID.randomUUID();
     }
 }

@@ -6,6 +6,7 @@ import co.edu.uniquindio.poo.proyectofinalprogramacionii.utils.Persistencia;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OfertaRepositorioImpl implements OfertaRepositorio {
     private List<Oferta> ofertas;

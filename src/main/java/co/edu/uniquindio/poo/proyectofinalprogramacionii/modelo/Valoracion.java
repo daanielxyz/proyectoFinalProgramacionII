@@ -1,12 +1,16 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 public class Valoracion implements Serializable {
-    private int valoracion;
+    private double puntuacion;
+
+    public Valoracion(double puntuacion) {
+        this.puntuacion = puntuacion;
+    }
 }

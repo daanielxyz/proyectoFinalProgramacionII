@@ -1,6 +1,7 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios;
 
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Ciudad;
+
 import java.util.List;
 
 public interface CiudadRepositorio {

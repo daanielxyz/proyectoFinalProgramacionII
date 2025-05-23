@@ -1,11 +1,17 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@AllArgsConstructor
-public class Reseña {
-    private String reseña;
+import java.io.Serializable;
+
+@Getter
+@Setter
+public class Reseña implements Serializable {
+    private String comentario;
     private String id;
+
+    public Reseña(String comentario) {
+        this.comentario = comentario;
+    }
 }

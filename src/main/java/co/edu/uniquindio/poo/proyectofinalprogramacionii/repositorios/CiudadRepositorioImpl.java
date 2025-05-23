@@ -38,7 +38,7 @@ public class CiudadRepositorioImpl implements CiudadRepositorio {
     @Override
     public Ciudad buscarPorNombre(String nombre) {
         return ciudades.stream()
-                .filter(c -> c.getNombre().equals(nombre))
+                .filter(c -> c.toString().equalsIgnoreCase(nombre))
                 .findFirst()
                 .orElse(null);
     }
@@ -46,7 +46,7 @@ public class CiudadRepositorioImpl implements CiudadRepositorio {
     @Override
     public void actualizar(Ciudad ciudad) {
         for (int i = 0; i < ciudades.size(); i++) {
-            if (ciudades.get(i).getNombre().equals(ciudad.getNombre())) {
+            if (ciudades.get(i).toString().equalsIgnoreCase(ciudad.toString())) {
                 ciudades.set(i, ciudad);
                 guardarDatos();
                 break;
@@ -56,7 +56,7 @@ public class CiudadRepositorioImpl implements CiudadRepositorio {
 
     @Override
     public void eliminar(String nombre) {
-        ciudades.removeIf(c -> c.getNombre().equals(nombre));
+        ciudades.removeIf(c -> c.toString().equalsIgnoreCase(nombre));
         guardarDatos();
     }
 

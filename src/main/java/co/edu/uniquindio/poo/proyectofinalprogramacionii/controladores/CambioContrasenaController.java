@@ -21,9 +21,9 @@ public class CambioContrasenaController {
             String email = emailField.getText();
             if (email.equals(Administrador.getInstancia().getEmail())) {
                 // Manejar administrador
-                plataformaServicio.solicitarCambioContrasena(email);
+                plataformaServicio.solicitarCambioContraseña(email);
             } else {
-                plataformaServicio.solicitarCambioContrasena(email);
+                plataformaServicio.solicitarCambioContraseña(email);
             }
             ControladorPrincipal.getInstancia().crearAlerta("Código enviado al correo", Alert.AlertType.INFORMATION);
         } catch (Exception e) {
@@ -39,10 +39,10 @@ public class CambioContrasenaController {
             String nuevaContrasena = nuevaContrasenaField.getText();
             if (email.equals(Administrador.getInstancia().getEmail())) {
                 // Manejar administrador
-                plataformaServicio.cambiarContrasena(email, codigo, nuevaContrasena);
-                Administrador.getInstancia().setContrasena(nuevaContrasena);
+                plataformaServicio.cambiarContraseña(email, codigo, nuevaContrasena);
+                Administrador.getInstancia().setContraseña(nuevaContrasena);
             } else {
-                plataformaServicio.cambiarContrasena(email, codigo, nuevaContrasena);
+                plataformaServicio.cambiarContraseña(email, codigo, nuevaContrasena);
             }
             ControladorPrincipal.getInstancia().crearAlerta("Contraseña cambiada con éxito", Alert.AlertType.INFORMATION);
         } catch (Exception e) {

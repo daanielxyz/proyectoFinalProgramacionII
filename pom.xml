@@ -118,7 +118,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                co.edu.uniquindio.poo.proyectofinalprogramacionii/co.edu.uniquindio.poo.proyectofinalprogramacionii.App
+                                co.edu.uniquindio.poo.proyectofinalprogramacionii/co.edu.uniquindio.poo.proyectofinalprogramacionii.MainApp
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

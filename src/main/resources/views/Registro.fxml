@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/21" spacing="10" alignment="CENTER" prefWidth="300"
+      fx:controller="co.edu.uniquindio.poo.proyectofinalprogramacionii.controladores.RegistroController">
+    <Label text="Registro de Usuario"/>
+    <TextField fx:id="txtCedula" promptText="Cédula"/>
+    <TextField fx:id="txtNombre" promptText="Nombre"/>
+    <TextField fx:id="txtTelefono" promptText="Teléfono"/>
+    <TextField fx:id="txtEmail" promptText="Email"/>
+    <PasswordField fx:id="txtContraseña" promptText="Contraseña"/>
+    <Button text="Registrar" onAction="#registrar"/>
+    <Separator/>
+    <Label text="Activar Cuenta"/>
+    <TextField fx:id="txtCodigo" promptText="Código de Activación"/>
+    <Button text="Activar" onAction="#activarCuenta"/>
+    <Button text="Volver" onAction="#volverAInicio"/>
+</VBox>
