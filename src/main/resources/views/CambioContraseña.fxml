@@ -1,12 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx" spacing="10" alignment="CENTER">
-    <Label text="Cambio de Contraseña"/>
-    <TextField fx:id="emailField" promptText="Correo Electrónico"/>
-    <TextField fx:id="codigoField" promptText="Código de Verificación"/>
-    <PasswordField fx:id="nuevaContrasenaField" promptText="Nueva Contraseña"/>
-    <Button text="Solicitar Código" onAction="#solicitarCodigo"/>
-    <Button text="Cambiar Contraseña" onAction="#cambiarContrasena"/>
-</VBox>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" styleClass="login-container" stylesheets="@../style/login.css" prefHeight="600" prefWidth="800">
+
+    <!-- Panel central de recuperación de contraseña con efecto glass -->
+    <VBox alignment="CENTER" spacing="25" styleClass="login-panel" minWidth="380" minHeight="480" prefWidth="400" prefHeight="500">
+        <padding>
+            <Insets bottom="40" left="40" right="40" top="40" />
+        </padding>
+
+        <!-- Título -->
+        <Label styleClass="bienvenida" text="Recuperar Contraseña" wrapText="false" maxWidth="Infinity" />
+
+        <!-- Espacio -->
+        <VBox spacing="20" alignment="CENTER">
+            <!-- Campos de recuperación -->
+            <TextField fx:id="emailField" prefWidth="280" promptText="📧 Correo Electrónico" styleClass="modern-text-field" />
+            <TextField fx:id="codigoField" prefWidth="280" promptText="🔑 Código de Verificación" styleClass="modern-text-field" />
+            <PasswordField fx:id="nuevaContrasenaField" prefWidth="280" promptText="🔒 Nueva Contraseña" styleClass="modern-text-field" />
+        </VBox>
+
+        <!-- Botones -->
+        <VBox spacing="15" alignment="CENTER">
+            <Button onAction="#solicitarCodigo" prefWidth="200" text="Solicitar Código" styleClass="modern-button" />
+            <Button onAction="#cambiarContrasena" prefWidth="200" text="Cambiar Contraseña" styleClass="modern-button" />
+        </VBox>
+
+        <!-- Botón para regresar -->
+        <Button onAction="#volverAInicioSesion" text="← Volver al Inicio" styleClass="link-button" />
+    </VBox>
+</StackPane>

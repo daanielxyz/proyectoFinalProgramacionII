@@ -1,6 +1,5 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Billetera;
 
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Billetera.Transaccion;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Usuario;
 import lombok.Getter;
 import lombok.Setter;

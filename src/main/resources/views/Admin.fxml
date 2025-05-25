@@ -1,33 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox xmlns="http://javafx.com/javafx/21" spacing="10" alignment="TOP_CENTER" prefWidth="600"
-      xmlns:fx="http://javafx.com/fxml">
-    <Label text="Panel de Administrador"/>
-    <HBox spacing="10">
-        <VBox spacing="10" prefWidth="300">
-            <Label text="Crear/Actualizar Alojamiento"/>
-            <TextField fx:id="txtNombre" promptText="Nombre"/>
-            <ComboBox fx:id="cbCiudad" promptText="Ciudad"/>
-            <TextField fx:id="txtDescripcion" promptText="Descripción"/>
-            <TextField fx:id="txtPrecioBase" promptText="Precio Base por Noche"/>
-            <TextField fx:id="txtHuespedesMax" promptText="Huéspedes Máximos"/>
-            <ComboBox fx:id="cbTipoAlojamiento" promptText="Tipo"/>
-            <TextField fx:id="txtCostoMantenimiento" promptText="Costo Mantenimiento (Casa/Apartamento)"/>
-            <HBox spacing="10">
-                <Button text="Crear" onAction="#crearAlojamiento"/>
-                <Button text="Actualizar" onAction="#actualizarAlojamiento"/>
+<?import javafx.scene.image.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml"
+           styleClass="admin-container" stylesheets="@../style/admin.css"
+           prefHeight="700" prefWidth="1200">
+
+    <VBox spacing="10" alignment="TOP_CENTER" styleClass="admin-main-container">
+
+        <!-- Encabezado con título y botón de cerrar sesión -->
+        <HBox spacing="15" alignment="CENTER" prefWidth="1150" styleClass="admin-header">
+            <Label text="🏢 Panel de Administrador" styleClass="titulo-principal"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="🚪 Cerrar Sesión" onAction="#cerrarSesion" styleClass="boton-cerrar-sesion"/>
+        </HBox>      <HBox spacing="8" prefWidth="1150">        <!-- Panel de formulario para crear/editar alojamientos -->
+        <VBox spacing="6" prefWidth="300" styleClass="admin-section">
+            <Label text="Crear/Actualizar Alojamiento" styleClass="seccion-titulo"/>
+            <TextField fx:id="txtNombre" promptText="Nombre" styleClass="admin-text-field"/>
+            <ComboBox fx:id="cbCiudad" promptText="Ciudad" styleClass="admin-combo-box"/>
+            <TextField fx:id="txtDescripcion" promptText="Descripción" styleClass="admin-text-field"/>
+            <TextField fx:id="txtPrecioBase" promptText="Precio Base por Noche" styleClass="admin-text-field"/>
+            <TextField fx:id="txtHuespedesMax" promptText="Huéspedes Máximos" styleClass="admin-text-field"/>
+            <TextField fx:id="txtServicios" promptText="Servicios (separados por comas)" styleClass="admin-text-field"/>
+            <ComboBox fx:id="cbTipoAlojamiento" promptText="Tipo" styleClass="admin-combo-box"/>
+            <TextField fx:id="txtCostoMantenimiento" promptText="Costo Mantenimiento" styleClass="admin-text-field"/>
+            <!-- Selección de imagen -->
+            <Separator styleClass="admin-separator"/>
+            <Label text="Imagen del Alojamiento" styleClass="info-titulo"/>
+            <HBox spacing="5" alignment="CENTER">
+                <Button text="Seleccionar Imagen" onAction="#seleccionarImagen" styleClass="admin-secondary-button"/>
+                <Label fx:id="lblImagenSeleccionada" text="Sin imagen" styleClass="imagen-info-label"/>
             </HBox>
-            <Label text="Añadir Habitación (Hotel)"/>
-            <TextField fx:id="txtHabitacionId" promptText="ID Habitación"/>
-            <TextField fx:id="txtHabitacionPrecio" promptText="Precio Habitación"/>
-            <TextField fx:id="txtHabitacionCapacidad" promptText="Capacidad Habitación"/>
-            <Button text="Añadir Habitación" onAction="#agregarHabitacion"/>
-        </VBox>
-        <VBox spacing="10" prefWidth="300">
-            <Label text="Alojamientos"/>
-            <ListView fx:id="lvAlojamientos" onMouseClicked="#seleccionarAlojamiento"/>
-            <Button text="Eliminar" onAction="#eliminarAlojamiento"/>
+
+            <!-- Botones de acción -->
+            <HBox spacing="5" alignment="CENTER">
+                <Button text="Crear" onAction="#crearAlojamiento" styleClass="admin-button"/>
+                <Button text="Actualizar" onAction="#actualizarAlojamiento" styleClass="admin-secondary-button"/>
+            </HBox>
+
+            <!-- Sección para habitaciones de hotel -->
+            <Separator styleClass="admin-separator"/>
+            <Label text="Añadir Habitación (Hotel)" styleClass="info-titulo"/>
+            <TextField fx:id="txtHabitacionId" promptText="ID Habitación" styleClass="admin-text-field"/>
+            <HBox spacing="5">
+                <TextField fx:id="txtHabitacionPrecio" promptText="Precio" styleClass="admin-text-field" HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="txtHabitacionCapacidad" promptText="Capacidad" styleClass="admin-text-field" HBox.hgrow="ALWAYS"/>
+            </HBox>
+            <Button text="Añadir Habitación" onAction="#agregarHabitacion" styleClass="admin-button"/>
+        </VBox>          <!-- Panel de lista de alojamientos -->
+        <VBox spacing="8" prefWidth="320" styleClass="admin-section">
+            <Label text="Alojamientos" styleClass="seccion-titulo"/>
+            <ListView fx:id="lvAlojamientos" onMouseClicked="#seleccionarAlojamiento" prefHeight="470" styleClass="admin-list-view"/>
+            <Button text="Eliminar Seleccionado" onAction="#eliminarAlojamiento" styleClass="admin-danger-button"/>
+        </VBox>          <!-- Panel de detalles del alojamiento seleccionado -->
+        <VBox spacing="8" prefWidth="520" styleClass="admin-section">
+            <Label text="Detalles del Alojamiento" styleClass="seccion-titulo"/>
+
+            <!-- Imagen del alojamiento -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <ImageView fx:id="imgAlojamiento" fitHeight="120" fitWidth="180" preserveRatio="true"
+                           styleClass="admin-image-view"/>
+                <VBox spacing="3">
+                    <Label fx:id="lblNombreDetalle" text="Nombre: " styleClass="detalle-label"/>
+                    <Label fx:id="lblTipoDetalle" text="Tipo: " styleClass="detalle-label"/>
+                    <Label fx:id="lblCiudadDetalle" text="Ciudad: " styleClass="detalle-label"/>
+                </VBox>
+            </HBox>
+
+            <Separator styleClass="admin-separator"/>
+
+            <!-- Información detallada -->
+            <ScrollPane prefHeight="195" fitToWidth="true" styleClass="admin-scroll-pane">
+                <VBox spacing="6">
+                    <Label fx:id="lblDescripcionDetalle" text="Descripción: " wrapText="true" styleClass="detalle-label"/>
+                    <Label fx:id="lblHuespedesDetalle" text="Huéspedes Máximos: " styleClass="detalle-label"/>
+                    <Label fx:id="lblPrecioDetalle" text="Precio por Noche: " styleClass="detalle-label"/>
+                    <Label fx:id="lblServiciosDetalle" text="Servicios: " wrapText="true" styleClass="detalle-label"/>
+                    <Label fx:id="lblMantenimientoDetalle" text="Costo Mantenimiento: " styleClass="detalle-label"/>
+                </VBox>
+            </ScrollPane>
+
+            <Separator styleClass="admin-separator"/>
+
+            <!-- Lista de habitaciones (solo para hoteles) -->
+            <Label fx:id="lblHabitacionesTitulo" text="Habitaciones:" styleClass="info-titulo" visible="false"/>
+            <ListView fx:id="lvHabitaciones" prefHeight="100" styleClass="admin-list-view" visible="false"/>
+
+            <!-- Estadísticas básicas -->
+            <Label fx:id="lblEstadisticas" text="Selecciona un alojamiento para ver los detalles"
+                   styleClass="estadisticas-label"/>
         </VBox>
     </HBox>
-</VBox>
+    </VBox>
+</StackPane>

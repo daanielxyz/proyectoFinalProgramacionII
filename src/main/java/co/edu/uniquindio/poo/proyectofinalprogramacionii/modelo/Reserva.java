@@ -33,4 +33,14 @@ public class Reserva implements Serializable {
     public static double calcularNochesDeReserva(LocalDate fechaEntrada, LocalDate fechaSalida) {
         return ChronoUnit.DAYS.between(fechaEntrada, fechaSalida);
     }
+
+    @Override
+    public String toString() {
+        return "Reserva en: " + alojamientoReservado.getNombre() +
+                ", Alojamiento: " + alojamientoReservado+
+                ", Habitación: " + (habitacion != null ? habitacion.getId() : "No aplica") +
+                ", Entrada: " + fechaEntrada +
+                ", Salida: " + fechaSalida +
+                ", Huéspedes: " + numeroHuespedes;
+    }
 }

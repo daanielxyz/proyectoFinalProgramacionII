@@ -1,25 +1,29 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.controladores;
 
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.*;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamiento;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamientos.Habitacion.Habitacion;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamientos.Hotel;
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.servicios.interfaces.IPlataformaServicio;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Ciudad;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Reserva;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Usuario;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class ReservaController {
     private final ControladorPrincipal controladorPrincipal = ControladorPrincipal.getInstancia();
     private final Usuario usuario;
-    private Stage stage;
-
-    @FXML
-    private ComboBox<Ciudad> cbCiudad;
+    private Stage stage;    @FXML
+    private ComboBox<String> cbCiudad;
     @FXML
     private ListView<Alojamiento> lvAlojamientos;
     @FXML
@@ -39,29 +43,38 @@ public class ReservaController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-
-    @FXML
+    }    @FXML
     private void initialize() {
-        cbCiudad.setItems(FXCollections.observableArrayList(Ciudad.values()));
+        // Crear lista con opción "TODAS LAS CIUDADES" y los valores del enum
+        List<String> opcionesCiudad = new ArrayList<>();
+        opcionesCiudad.add("TODAS LAS CIUDADES");
+        for (Ciudad ciudad : Ciudad.values()) {
+            opcionesCiudad.add(ciudad.toString());
+        }
+        cbCiudad.setItems(FXCollections.observableArrayList(opcionesCiudad));
+
+        // Agregar listener para filtrado automático al cambiar selección
+        cbCiudad.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                filtrarAlojamientosPorSeleccion(newValue);
+            }
+        });
+        // Establecer "TODAS LAS CIUDADES" como selección inicial
+        cbCiudad.getSelectionModel().select("TODAS LAS CIUDADES");
+
         lblSaldo.setText("Saldo: $" + usuario.getBilletera().getSaldo());
         actualizarReservas();
+        cargarTodosLosAlojamientos();
     }
 
     @FXML
     private void buscarAlojamientos() {
-        Ciudad ciudad = cbCiudad.getValue();
-        if (ciudad == null) {
-            new Alert(Alert.AlertType.WARNING, "Selecciona una ciudad").show();
+        String ciudadSeleccionada = cbCiudad.getValue();
+        if (ciudadSeleccionada == null) {
+            new Alert(Alert.AlertType.WARNING, "Selecciona una opción").show();
             return;
         }
-        try {
-            List<Alojamiento> alojamientos = controladorPrincipal.getPlataformaServicio().consultarAlojamientos(ciudad);
-            lvAlojamientos.setItems(FXCollections.observableArrayList(alojamientos));
-            lvHabitaciones.setItems(FXCollections.observableArrayList());
-        } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
-        }
+        filtrarAlojamientosPorSeleccion(ciudadSeleccionada);
     }
 
     @FXML
@@ -181,13 +194,56 @@ public class ReservaController {
             }
         });
     }
-
     private void actualizarReservas() {
         try {
             List<Reserva> reservas = controladorPrincipal.getPlataformaServicio().consultarReservasUsuario(usuario);
             lvReservas.setItems(FXCollections.observableArrayList(reservas));
+            lvReservas.refresh();
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    private void cargarTodosLosAlojamientos() {
+        try {
+            List<Alojamiento> alojamientos = controladorPrincipal.getPlataformaServicio().consultarAlojamientos(null);
+            lvAlojamientos.setItems(FXCollections.observableArrayList(alojamientos));
+            lvHabitaciones.setItems(FXCollections.observableArrayList());
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }
+    }
+
+    private void filtrarAlojamientosPorSeleccion(String ciudadSeleccionada) {
+        try {
+            List<Alojamiento> alojamientos;
+            if ("TODAS LAS CIUDADES".equals(ciudadSeleccionada)) {
+                // Mostrar todos los alojamientos
+                alojamientos = controladorPrincipal.getPlataformaServicio().consultarAlojamientos(null);
+            } else {
+                // Convertir el string a enum Ciudad y buscar por ciudad específica
+                Ciudad ciudad = Ciudad.valueOf(ciudadSeleccionada);
+                alojamientos = controladorPrincipal.getPlataformaServicio().consultarAlojamientos(ciudad);
+            }
+            lvAlojamientos.setItems(FXCollections.observableArrayList(alojamientos));
+            lvHabitaciones.setItems(FXCollections.observableArrayList());
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.ERROR, "Error al filtrar alojamientos: " + e.getMessage()).show();
+        }
+    }
+
+    @FXML
+    private void cerrarSesion() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/InicioSesion.fxml"));
+            loader.setController(new InicioSesionController());
+            Scene scene = new Scene(loader.load());
+            stage.setScene(scene);
+            InicioSesionController controller = loader.getController();
+            controller.setStage(stage);
+            stage.show();
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, "Error al cerrar sesión: " + e.getMessage()).show();
         }
     }
 }

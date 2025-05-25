@@ -1,33 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<VBox xmlns="http://javafx.com/javafx/21" spacing="10" alignment="TOP_CENTER" prefWidth="600"
-      xmlns:fx="http://javafx.com/fxml">
-    <Label text="Gestión de Reservas"/>
-    <Label fx:id="lblSaldo"/>
-    <Button text="Recargar Billetera" onAction="#recargarBilletera"/>
-    <HBox spacing="10">
-        <VBox spacing="10" prefWidth="300">
-            <Label text="Buscar Alojamientos"/>
-            <ComboBox fx:id="cbCiudad" promptText="Ciudad"/>
-            <Button text="Buscar" onAction="#buscarAlojamientos"/>
-            <ListView fx:id="lvAlojamientos" onMouseClicked="#mostrarHabitaciones"/>
-            <ListView fx:id="lvHabitaciones"/>
-            <Label text="Crear Reserva"/>
-            <DatePicker fx:id="dpFechaEntrada" promptText="Fecha Entrada"/>
-            <DatePicker fx:id="dpFechaSalida" promptText="Fecha Salida"/>
-            <TextField fx:id="txtHuespedes" promptText="Nº Huéspedes"/>
-            <Button text="Reservar" onAction="#crearReserva"/>
-        </VBox>
-        <VBox spacing="10" prefWidth="300">
-            <Label text="Mis Reservas"/>
-            <ListView fx:id="lvReservas"/>
-            <Button text="Cancelar Reserva" onAction="#cancelarReserva"/>
-            <Label text="Reseñas y Valoraciones"/>
-            <TextField fx:id="txtReseña" promptText="Escribe una reseña"/>
-            <Button text="Añadir Reseña" onAction="#agregarReseña"/>
-            <TextField fx:id="txtValoracion" promptText="Valoración (1-5)"/>
-            <Button text="Añadir Valoración" onAction="#agregarValoracion"/>
-        </VBox>
-    </HBox>
-</VBox>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" styleClass="reserva-container" stylesheets="@../style/reserva.css" prefHeight="800" prefWidth="1200">
+
+    <!-- Panel principal con efecto glass -->
+    <VBox alignment="TOP_CENTER" spacing="20" styleClass="reserva-panel" maxWidth="Infinity" maxHeight="Infinity" prefWidth="1100" prefHeight="750">
+        <padding>
+            <Insets bottom="25" left="25" right="25" top="25" />
+        </padding>
+
+        <!-- Encabezado con título y botón de cerrar sesión -->
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <Label styleClass="reserva-titulo" text="🏨 Gestión de Reservas" wrapText="false" maxWidth="Infinity" />
+            <Region HBox.hgrow="ALWAYS" />
+            <!-- Información del saldo -->
+            <Label fx:id="lblSaldo" styleClass="saldo-label" text="💰 Saldo: $0" />
+            <Button text="💳 Recargar Billetera" onAction="#recargarBilletera" styleClass="wallet-button" />
+            <Button text="🚪 Cerrar Sesión" onAction="#cerrarSesion" styleClass="logout-button" />
+        </HBox>
+
+        <!-- Separador -->
+        <Separator styleClass="modern-separator" prefWidth="1000" />
+
+        <!-- Contenido principal dividido en dos secciones -->
+        <HBox spacing="25" alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
+
+            <!-- Sección izquierda: Búsqueda y creación de reservas -->
+            <VBox spacing="20" styleClass="reserva-section" prefWidth="520" VBox.vgrow="ALWAYS">
+                <!-- Título de la sección -->
+                <Label styleClass="seccion-titulo" text="🔍 Buscar y Reservar Alojamientos" />
+
+                <!-- Búsqueda de alojamientos -->
+                <VBox spacing="15">
+                    <Label styleClass="info-text" text="Selecciona una ciudad para ver alojamientos disponibles:" />
+                    <ComboBox fx:id="cbCiudad" promptText="🌆 Seleccionar ciudad" styleClass="modern-combo-box" prefWidth="450" />
+                    <Button text="🔍 Buscar Alojamientos" onAction="#buscarAlojamientos" styleClass="modern-button" prefWidth="200" />
+                </VBox>
+
+                <!-- Lista de alojamientos -->
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
+                    <Label styleClass="info-text" text="📋 Alojamientos disponibles:" />
+                    <ListView fx:id="lvAlojamientos" onMouseClicked="#mostrarHabitaciones" styleClass="modern-list-view" prefHeight="150" />
+                </VBox>
+
+                <!-- Lista de habitaciones -->
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
+                    <Label styleClass="info-text" text="🛏️ Habitaciones disponibles:" />
+                    <ListView fx:id="lvHabitaciones" styleClass="modern-list-view" prefHeight="120" />
+                </VBox>
+
+                <!-- Formulario de reserva -->
+                <VBox spacing="15">
+                    <Label styleClass="seccion-titulo" text="📅 Crear Nueva Reserva" />
+                    <DatePicker fx:id="dpFechaEntrada" promptText="📅 Fecha de entrada" styleClass="modern-date-picker" prefWidth="450" />
+                    <DatePicker fx:id="dpFechaSalida" promptText="📅 Fecha de salida" styleClass="modern-date-picker" prefWidth="450" />
+                    <TextField fx:id="txtHuespedes" promptText="👥 Número de huéspedes" styleClass="modern-text-field" prefWidth="450" />
+                    <Button text="✅ Confirmar Reserva" onAction="#crearReserva" styleClass="modern-button" prefWidth="250" />
+                </VBox>
+            </VBox>
+
+            <!-- Sección derecha: Mis reservas y reseñas -->
+            <VBox spacing="20" styleClass="reserva-section" prefWidth="520" VBox.vgrow="ALWAYS">
+                <!-- Título de la sección -->
+                <Label styleClass="seccion-titulo" text="📋 Mis Reservas" />
+
+                <!-- Lista de reservas del usuario -->
+                <VBox spacing="10" VBox.vgrow="ALWAYS">
+                    <Label styleClass="info-text" text="Tus reservas actuales y pasadas:" />
+                    <ListView fx:id="lvReservas" styleClass="modern-list-view" prefHeight="250" />
+                    <Button text="❌ Cancelar Reserva Seleccionada" onAction="#cancelarReserva" styleClass="danger-button" prefWidth="280" />
+                </VBox>
+
+                <!-- Separador -->
+                <Separator styleClass="modern-separator" prefWidth="450" />
+
+                <!-- Sección de reseñas y valoraciones -->
+                <VBox spacing="15">
+                    <Label styleClass="seccion-titulo" text="⭐ Reseñas y Valoraciones" />
+
+                    <Label styleClass="info-text" text="Comparte tu experiencia:" />
+                    <TextField fx:id="txtReseña" promptText="✍️ Escribe tu reseña aquí..." styleClass="modern-text-field" prefWidth="450" />
+                    <Button text="📝 Añadir Reseña" onAction="#agregarReseña" styleClass="info-button" prefWidth="200" />
+
+                    <TextField fx:id="txtValoracion" promptText="⭐ Valoración (1-5 estrellas)" styleClass="modern-text-field" prefWidth="450" />
+                    <Button text="⭐ Añadir Valoración" onAction="#agregarValoracion" styleClass="info-button" prefWidth="200" />
+                </VBox>
+            </VBox>
+        </HBox>
+    </VBox>
+</StackPane>

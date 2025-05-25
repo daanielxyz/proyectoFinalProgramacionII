@@ -1,10 +1,11 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.servicios;
 
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.*;
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.*;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Administrador;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Usuario;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.AdministradorRepositorioImpl;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.UsuarioRepositorioImpl;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.utils.EnvioEmail;
-
-import java.util.UUID;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.utils.GeneradorCodigos;
 
 public class UsuarioServicio {
     private final UsuarioRepositorioImpl usuarioRepositorio;
@@ -19,16 +20,18 @@ public class UsuarioServicio {
         this.usuarioRepositorio = new UsuarioRepositorioImpl();
         this.administradorRepositorio = new AdministradorRepositorioImpl();
         this.billeteraServicio = new BilleteraServicio();
-    }
-
-    public void registrarUsuario(Usuario usuario) throws Exception {
+    }    public void registrarUsuario(Usuario usuario) throws Exception {
         if (usuarioRepositorio.buscarUsuarioPorEmail(usuario.getEmail()) != null ||
                 administradorRepositorio.buscarAdministradorPorEmail(usuario.getEmail()) != null) {
             throw new Exception("El email ya está registrado");
         }
-        String codigoActivacion = UUID.randomUUID().toString();
+        String codigoActivacion = GeneradorCodigos.generarCodigoActivacion();
         usuario.setCodigoActivacion(codigoActivacion);
         usuarioRepositorio.guardarUsuario(usuario);
+
+        // Guardar la billetera del usuario en el repositorio de billeteras
+        billeteraServicio.guardarBilletera(usuario.getBilletera());
+
         EnvioEmail.enviarNotificacion(usuario.getEmail(), "Activación de Cuenta",
                 "Tu código de activación es: " + codigoActivacion);
     }
@@ -89,15 +92,13 @@ public class UsuarioServicio {
             throw new Exception("Usuario no encontrado");
         }
         usuarioRepositorio.eliminarUsuario(email);
-    }
-
-    public void solicitarCambioContraseña(String email) throws Exception {
+    }    public void solicitarCambioContraseña(String email) throws Exception {
         Usuario usuario = usuarioRepositorio.buscarUsuarioPorEmail(email);
         Administrador admin = administradorRepositorio.buscarAdministradorPorEmail(email);
         if (usuario == null && admin == null) {
             throw new Exception("Usuario no encontrado");
         }
-        String codigo = UUID.randomUUID().toString();
+        String codigo = GeneradorCodigos.generarCodigoCambioContrasena();
         if (usuario != null) {
             usuario.setCodigoActivacion(codigo);
             usuarioRepositorio.actualizarUsuario(usuario);

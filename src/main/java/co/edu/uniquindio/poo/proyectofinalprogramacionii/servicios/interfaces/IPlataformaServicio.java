@@ -24,4 +24,5 @@ public interface IPlataformaServicio {
     List<Alojamiento> buscarAlojamientosAleatorios();
     List<Oferta> listarOfertasPorAlojamiento(String alojamientoNombre);
     void asignarAdministrador(Administrador admin);
+    List<Alojamiento> listarAlojamientos();
 }

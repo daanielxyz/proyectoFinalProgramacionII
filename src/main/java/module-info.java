@@ -8,6 +8,7 @@ module co.edu.uniquindio.poo.proyectofinalprogramacionii {
     requires com.google.zxing.javase;
     requires com.google.zxing;
     requires jbcrypt;
+    requires jakarta.activation;
     requires java.desktop;
 
     opens co.edu.uniquindio.poo.proyectofinalprogramacionii.controladores to javafx.fxml;

@@ -1,18 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<VBox xmlns="http://javafx.com/javafx/21" spacing="10" alignment="CENTER" prefWidth="300"
-      xmlns:fx="http://javafx.com/fxml">
-    <Label text="Registro de Usuario"/>
-    <TextField fx:id="txtCedula" promptText="Cédula"/>
-    <TextField fx:id="txtNombre" promptText="Nombre"/>
-    <TextField fx:id="txtTelefono" promptText="Teléfono"/>
-    <TextField fx:id="txtEmail" promptText="Email"/>
-    <PasswordField fx:id="txtContraseña" promptText="Contraseña"/>
-    <Button text="Registrar" onAction="#registrar"/>
-    <Separator/>
-    <Label text="Activar Cuenta"/>
-    <TextField fx:id="txtCodigo" promptText="Código de Activación"/>
-    <Button text="Activar" onAction="#activarCuenta"/>
-    <Button text="Volver" onAction="#volverAInicio"/>
-</VBox>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" styleClass="login-container" stylesheets="@../style/login.css" prefHeight="700" prefWidth="800">
+
+    <!-- Panel central de registro con efecto glass -->
+    <VBox alignment="CENTER" spacing="20" styleClass="login-panel" minWidth="420" minHeight="620" prefWidth="450" prefHeight="650">
+        <padding>
+            <Insets bottom="30" left="30" right="30" top="30" />
+        </padding>        <!-- Título de registro -->
+        <Label styleClass="bienvenida" text="📝 Registro de Usuario" wrapText="false" maxWidth="Infinity" />
+
+        <!-- Formulario de registro -->
+        <VBox spacing="15" alignment="CENTER">
+            <TextField fx:id="txtCedula" prefWidth="320" promptText="🆔 Cédula" styleClass="modern-text-field" />
+            <TextField fx:id="txtNombre" prefWidth="320" promptText="👤 Nombre completo" styleClass="modern-text-field" />
+            <TextField fx:id="txtTelefono" prefWidth="320" promptText="📱 Teléfono" styleClass="modern-text-field" />
+            <TextField fx:id="txtEmail" prefWidth="320" promptText="📧 Email" styleClass="modern-text-field" />
+            <PasswordField fx:id="txtContraseña" prefWidth="320" promptText="🔒 Contraseña" styleClass="modern-text-field" />
+        </VBox>
+
+        <!-- Botón de registro -->
+        <Button text="Crear Cuenta" onAction="#registrar" prefWidth="200" styleClass="modern-button" />
+
+        <!-- Separador con estilo -->
+        <VBox spacing="10" alignment="CENTER">
+            <Separator prefWidth="300" style="-fx-background-color: rgba(255, 255, 255, 0.3);" />
+            <Label text="¿Ya tienes código de activación?" style="-fx-text-fill: white; -fx-font-size: 14px;" />
+        </VBox>
+
+        <!-- Sección de activación -->
+        <VBox spacing="15" alignment="CENTER">
+            <TextField fx:id="txtCodigo" prefWidth="320" promptText="🔑 Código de Activación" styleClass="modern-text-field" />
+            <Button text="Activar Cuenta" onAction="#activarCuenta" prefWidth="200" styleClass="modern-button" />
+        </VBox>
+
+        <!-- Botón para volver -->
+        <Button text="⬅ Volver al Inicio" onAction="#volverAInicio" prefWidth="180" styleClass="secondary-button" />
+    </VBox>
+</StackPane>

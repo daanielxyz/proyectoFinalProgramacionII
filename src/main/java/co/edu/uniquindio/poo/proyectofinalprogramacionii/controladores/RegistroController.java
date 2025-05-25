@@ -1,7 +1,6 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.controladores;
 
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Usuario;
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.servicios.interfaces.IPlataformaServicio;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -36,7 +35,7 @@ public class RegistroController {
                     txtContraseña.getText()
             );
             controladorPrincipal.getPlataformaServicio().registrarUsuario(usuario);
-            new Alert(Alert.AlertType.INFORMATION, "Usuario registrado. Usa el código de activación: " + usuario.getCodigoActivacion()).show();
+            new Alert(Alert.AlertType.INFORMATION, "Usuario registrado. Usa el código de activación enviado a su correo!");
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
         }

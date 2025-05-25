@@ -1,14 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx" spacing="10" alignment="CENTER">
-    <TextField fx:id="busquedaField" promptText="Buscar por ciudad, nombre, tipo o precio"/>
-    <ListView fx:id="listaAlojamientos"/>
-    <Label text="Ofertas Especiales"/>
-    <HBox fx:id="ofertasBox" spacing="10"/>
-    <HBox spacing="10">
-        <Button text="Iniciar Sesión" onAction="#irAInicioSesion"/>
-        <Button text="Registrarse" onAction="#irARegistro"/>
-    </HBox>
-</VBox>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" styleClass="login-container" stylesheets="@../style/login.css" prefHeight="700" prefWidth="1000">
+    <!-- Panel principal con efecto glass -->
+    <VBox alignment="TOP_CENTER" spacing="25" styleClass="login-panel" minWidth="600" minHeight="500" prefWidth="900" prefHeight="650">
+        <padding>
+            <Insets bottom="30" left="30" right="30" top="30" />
+        </padding>
+
+        <!-- Encabezado -->
+        <VBox alignment="CENTER" spacing="10">
+            <Label styleClass="bienvenida" text="🏨 BookYourStay" wrapText="false" maxWidth="Infinity" />
+            <Label text="Encuentra tu alojamiento perfecto" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-style: italic;" />
+        </VBox>
+
+        <!-- Barra de búsqueda -->
+        <VBox alignment="CENTER" spacing="15">
+            <Label text="🔍 Buscar Alojamientos" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" />
+            <TextField fx:id="busquedaField" prefWidth="600" promptText="🌆 Buscar por ciudad, nombre, tipo o precio" styleClass="modern-text-field" />
+        </VBox>
+
+        <!-- Lista de alojamientos -->
+        <VBox alignment="CENTER" spacing="15" VBox.vgrow="ALWAYS">
+            <Label text="📋 Alojamientos Disponibles" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" />
+            <ListView fx:id="listaAlojamientos" prefHeight="280" prefWidth="800" style="-fx-background-color: rgba(255, 255, 255, 0.9); -fx-background-radius: 15; -fx-border-radius: 15;" />
+        </VBox>
+
+        <!-- Sección de ofertas -->
+        <VBox alignment="CENTER" spacing="15">
+            <Label text="🎉 Ofertas Especiales" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" />
+            <HBox fx:id="ofertasBox" spacing="15" alignment="CENTER" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-background-radius: 15; -fx-padding: 15;" />
+        </VBox>
+
+        <!-- Botones de acción -->
+        <HBox spacing="20" alignment="CENTER">
+            <Button text="🔑 Iniciar Sesión" onAction="#irAInicioSesion" prefWidth="160" styleClass="modern-button" />
+            <Button text="📝 Registrarse" onAction="#irARegistro" prefWidth="160" styleClass="secondary-button" />
+        </HBox>
+    </VBox>
+</StackPane>

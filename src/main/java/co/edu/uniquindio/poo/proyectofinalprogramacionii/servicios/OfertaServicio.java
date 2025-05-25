@@ -2,7 +2,6 @@ package co.edu.uniquindio.poo.proyectofinalprogramacionii.servicios;
 
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamiento;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Oferta;
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.OfertaRepositorio;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.OfertaRepositorioImpl;
 
 import java.time.LocalDateTime;

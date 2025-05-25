@@ -1,15 +1,19 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.servicios;
 
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.*;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamiento;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamientos.Habitacion.Habitacion;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamientos.Hotel;
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.*;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Factura;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Reserva;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Usuario;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.AlojamientoRepositorioImpl;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.ReservaRepositorioImpl;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.UsuarioRepositorioImpl;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.utils.EnvioEmail;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.utils.GeneradorQR;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 public class ReservaServicio {
     private final ReservaRepositorioImpl reservaRepositorio;
@@ -42,17 +46,47 @@ public class ReservaServicio {
                 ? ((Hotel) alojamiento).getPrecioPorNocheTotal(habitacion)
                 : alojamiento.getPrecioPorNocheTotal();
         double monto = precioBase * noches;
-        Factura factura = new Factura(monto, monto, LocalDateTime.now(), reserva);
-        billeteraServicio.pagarReserva(usuario.getBilletera(), monto, reserva);
+        Factura factura = new Factura(monto, monto, LocalDateTime.now(), reserva);        billeteraServicio.pagarReserva(usuario.getBilletera(), monto, reserva);
         alojamiento.getReservasAlojamientoActivas().add(reserva);
         alojamientoRepositorio.actualizar(alojamiento);
         reservaRepositorio.guardar(reserva);
+        confirmarReserva(reserva);
+
+        UsuarioRepositorioImpl usuarioRepositorio = new UsuarioRepositorioImpl();
+        usuarioRepositorio.actualizarUsuario(usuario);
         String qrData = "Factura ID: " + factura.getId() + "\nMonto: " + factura.getTotal();
         String qrPath = "data/factura_" + factura.getId() + ".png";
         GeneradorQR.generarQR(qrData, qrPath);
         String mensaje = "Reserva realizada con éxito.\nMonto: " + monto + "\nFactura ID: " + factura.getId();
         EnvioEmail.enviarNotificacion(usuario.getEmail(), "Confirmación de Reserva", mensaje);
+
     }
+
+    public void confirmarReserva(Reserva reserva) throws Exception {
+
+        if (reserva == null || reserva.getUsuario().getEmail() == null || reserva.getId() == null) {
+            throw new Exception("La reserva o sus datos no pueden ser nulos.");
+        }
+        String qrData = "https://bookyourstay.com/reserva/" + reserva.getId();
+        String qrPath = System.getProperty("java.io.tmpdir") + "/qr_" + reserva.getId() + ".png";
+        String asunto = "Confirmación de Reserva #" + reserva.getId();
+        String mensaje = "Hola,\n\n" +
+                "Tu reserva ha sido confirmada con los siguientes detalles:\n" +
+                "Alojamiento: " + reserva.getAlojamientoReservado().getNombre() + "\n" +
+                "ID de Reserva: " + reserva.getId() + "\n" +
+                "Fecha de entrada: " + reserva.getFechaEntrada() + "\n" +
+                "Fecha de salida: " + reserva.getFechaSalida() + "\n" +
+                "Adjunto encontrarás un código QR con la información de tu reserva.";
+
+        EnvioEmail.enviarEmailConQR(
+                reserva.getUsuario().getEmail(),
+                asunto,
+                mensaje,
+                qrData,
+                qrPath
+        );
+    }
+
 
     public void cancelarReserva(Reserva reserva, Usuario usuario) throws Exception {
         if (!reserva.getUsuario().equals(usuario)) {

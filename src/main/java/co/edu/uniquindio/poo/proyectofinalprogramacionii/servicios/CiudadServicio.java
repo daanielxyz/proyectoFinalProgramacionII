@@ -1,7 +1,6 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.servicios;
 
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Ciudad;
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.CiudadRepositorio;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.CiudadRepositorioImpl;
 
 public class CiudadServicio {

@@ -2,11 +2,9 @@ package co.edu.uniquindio.poo.proyectofinalprogramacionii.servicios;
 
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.*;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamientos.Habitacion.Habitacion;
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.*;
 import co.edu.uniquindio.poo.proyectofinalprogramacionii.servicios.interfaces.IPlataformaServicio;
 
 import java.util.List;
-import java.util.UUID;
 
 public class PlataformaServicio implements IPlataformaServicio {
     private final UsuarioServicio usuarioServicio;
@@ -56,11 +54,11 @@ public class PlataformaServicio implements IPlataformaServicio {
     @Override
     public void cambiarContraseña(String email, String codigo, String nuevaContraseña) throws Exception {
         usuarioServicio.cambiarContraseña(email, codigo, nuevaContraseña);
-    }
-
-    @Override
+    }    @Override
     public void recargarBilletera(Usuario usuario, double monto) throws Exception {
         billeteraServicio.recargarBilletera(usuario.getBilletera(), monto);
+        // Actualizar el usuario en el repositorio para sincronizar la billetera
+        usuarioServicio.editarUsuario(usuario);
     }
 
     @Override
@@ -101,6 +99,7 @@ public class PlataformaServicio implements IPlataformaServicio {
             default:
                 throw new Exception("Acción no válida: " + accion);
         }
+        System.out.println(alojamientoServicio.listarTodos());
     }
 
     @Override
@@ -138,5 +137,13 @@ public class PlataformaServicio implements IPlataformaServicio {
 
     public void asignarAdministrador(Administrador admin){
         usuarioServicio.asignarAdministrador(admin);
+    }
+
+    public List<Alojamiento> listarAlojamientos(){
+        return alojamientoServicio.listarTodos();
+    }
+
+    public void actualizarAlojamiento(Alojamiento alojamiento) throws Exception {
+        alojamientoServicio.actualizarAlojamiento(alojamiento);
     }
 }

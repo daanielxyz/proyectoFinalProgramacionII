@@ -5,27 +5,37 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="500" prefWidth="400" spacing="15" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
-    <padding>
-        <Insets bottom="20" left="20" right="20" top="20" />
-    </padding>
+<StackPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" styleClass="login-container" stylesheets="@../style/login.css" prefHeight="600" prefWidth="800">
 
-    <!-- Mensaje de bienvenida -->
-    <Label styleClass="bienvenida" text="Bienvenido a BookYourStay!" />
+    <!-- Panel central de login con efecto glass -->
+    <VBox alignment="CENTER" spacing="25" styleClass="login-panel" minWidth="380" minHeight="480" prefWidth="400" prefHeight="500">
+        <padding>
+            <Insets bottom="40" left="40" right="40" top="40" />
+        </padding>
 
-    <!-- Espacio para imagen -->
-    <ImageView fx:id="imgLogo" fitHeight="150" fitWidth="352.0" />
+        <!-- Mensaje de bienvenida -->
+        <Label styleClass="bienvenida" text="        BookYourStay" wrapText="false" maxWidth="Infinity" />
 
-    <!-- Campos de inicio de sesión -->
-    <TextField fx:id="txtEmail" prefWidth="250" promptText="Email" />
-    <PasswordField fx:id="txtContraseña" prefWidth="250" promptText="Contraseña" />
+        <!-- Espacio -->
+        <VBox spacing="20" alignment="CENTER">
+            <!-- Campos de inicio de sesión -->
+            <TextField fx:id="txtEmail" prefWidth="280" promptText="📧 Ingresa tu email" styleClass="modern-text-field" />
+            <PasswordField fx:id="txtContraseña" prefWidth="280" promptText="🔒 Ingresa tu contraseña" styleClass="modern-text-field" />
+        </VBox>
 
-    <HBox alignment="CENTER" spacing="10">
-        <Button onAction="#iniciarSesion" prefWidth="120" text="Iniciar Sesión" />
-        <Button onAction="#irARegistro" prefWidth="120" text="Registrarse" />
-    </HBox>
-</VBox>
+        <!-- Botones -->
+        <HBox alignment="CENTER" spacing="15">
+            <Button onAction="#iniciarSesion" prefWidth="130" text="Iniciar Sesión" styleClass="modern-button" />
+            <Button onAction="#irARegistro" prefWidth="130" text="Registrarse" styleClass="secondary-button" />
+        </HBox>
+
+        <!-- Enlace de recuperación de contraseña -->
+        <Button onAction="#irARecuperarContrasena" text="¿Olvidaste tu contraseña?" styleClass="link-button" />
+    </VBox>
+</StackPane>

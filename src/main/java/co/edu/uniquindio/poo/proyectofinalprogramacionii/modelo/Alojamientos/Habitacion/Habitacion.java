@@ -1,20 +1,21 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamientos.Habitacion;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
 public class Habitacion implements Serializable {
     private String id;
     private double precio;
     private int capacidad;
 
-    public Habitacion(String id, double precio, int capacidad) {
-        this.id = id;
-        this.precio = precio;
-        this.capacidad = capacidad;
+
+    @Override
+    public String toString() {
+        return String.format("Habitación %s - $%.2f/noche (%d personas)",
+                id, precio, capacidad);
     }
 }

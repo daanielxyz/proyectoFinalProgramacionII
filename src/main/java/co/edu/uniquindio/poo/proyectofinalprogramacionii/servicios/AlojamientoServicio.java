@@ -1,10 +1,10 @@
 package co.edu.uniquindio.poo.proyectofinalprogramacionii.servicios;
 
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.*;
-import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.*;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Alojamiento;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.modelo.Ciudad;
+import co.edu.uniquindio.poo.proyectofinalprogramacionii.repositorios.AlojamientoRepositorioImpl;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class AlojamientoServicio {
@@ -27,9 +27,10 @@ public class AlojamientoServicio {
             throw new Exception("No se puede eliminar un alojamiento con reservas activas");
         }
         alojamientoRepositorio.eliminar(alojamiento);
-    }
-
-    public List<Alojamiento> consultarAlojamientos(Ciudad ciudad) {
+    }    public List<Alojamiento> consultarAlojamientos(Ciudad ciudad) {
+        if (ciudad == null) {
+            return alojamientoRepositorio.listarTodos();
+        }
         return alojamientoRepositorio.listarPorCiudad(ciudad);
     }
 
@@ -37,5 +38,9 @@ public class AlojamientoServicio {
         List<Alojamiento> alojamientosIniciales = alojamientoRepositorio.listarTodos();
         Collections.shuffle(alojamientosIniciales);
         return alojamientosIniciales.subList(0, 3);
+    }
+
+    public List<Alojamiento> listarTodos(){
+        return alojamientoRepositorio.listarTodos();
     }
 }
